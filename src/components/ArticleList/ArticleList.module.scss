@@ -1,0 +1,35 @@
+.articleList {
+  height: 100%;
+  .container {
+    background: rgb(235, 238, 243);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 26px;
+    width: 100%;
+    padding-top: 26px;
+    padding-left: 15%;
+    padding-right: 15%;
+    padding-bottom: 17px;
+    height: auto;
+
+    .link{
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  body:global {
+    background: rgb(235, 238, 243);
+    height: 100vh !important;
+  }
+
+  .articlesPaginater {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 17px;
+    padding-top: 10px;
+    position: sticky;
+    bottom: 0;
+    background-color:rgb(235, 238, 243);
+  }
+}
