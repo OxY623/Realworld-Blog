@@ -30,7 +30,7 @@ export const fetchArticle = async (slug) => {
 export const fetchSingUp = async (data) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    return await axios.post('https://blog.kata.academy/api/users', data, {
+    return await axios.post(`${API_URL}/users`, data, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -43,7 +43,7 @@ export const fetchSingUp = async (data) => {
 export const fetchSignIn = async (data, token) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    return await axios.post('https://blog.kata.academy/api/users/login', data, {
+    return await axios.post(`${API_URL}/users/login`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ export const fetchSignIn = async (data, token) => {
 export const fetchUpdateProfile = async (data, token) => {
   // eslint-disable-next-line no-useless-catch
   try {
-    return await axios.put('https://blog.kata.academy/api/user', data, {
+    return await axios.put(`${API_URL}/user`, data, {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
