@@ -53,3 +53,17 @@ export const fetchSignIn = async (data, token) => {
     throw error
   }
 }
+
+export const fetchUpdateProfile = async (data, token) => {
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.put('https://blog.kata.academy/api/user', data, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+  } catch (error) {
+    throw error
+  }
+}

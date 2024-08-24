@@ -13,6 +13,8 @@ import Profile from '../../pages/Profile'
 import SignUp from '../../pages/SignUp'
 
 function App() {
+  const user = JSON.parse(localStorage.getItem('user')) || null
+  console.log(user)
   return (
     <div className="app">
       <Router>

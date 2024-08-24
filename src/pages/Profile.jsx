@@ -1,42 +1,45 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
-import axios from 'axios'
 
+import { updateProfile } from '../store/actions/profileActions'
 import Header from '../components/Header'
 
 import styles from './Profile.module.scss'
 
 const Profile = () => {
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState('')
+  const dispatch = useDispatch()
+  const { loading, successMessage, errors } = useSelector(
+    (state) => state.profile,
+  )
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors: formErrors },
     setError,
   } = useForm()
 
-  const onSubmit = async (data) => {
-    setLoading(true)
-    try {
-      await axios.put('https://blog.kata.academy/api/user', data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`, // Assuming you store token in local storage
-        },
-      })
-      setSuccessMessage('Profile updated successfully!')
-    } catch (error) {
-      // Handle server errors
-      if (error.response && error.response.data) {
-        const { errors: serverErrors } = error.response.data
-        for (const [field, message] of Object.entries(serverErrors)) {
-          setError(field, { type: 'manual', message })
-        }
-      }
-    } finally {
-      setLoading(false)
-    }
+  const onSubmit = (data) => {
+    dispatch(updateProfile(data))
   }
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        dispatch({ type: 'CLEAR_SUCCESS_MESSAGE' })
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [successMessage, dispatch])
+
+  useEffect(() => {
+    if (errors) {
+      Object.entries(errors).forEach(([field, message]) => {
+        setError(field, { type: 'manual', message })
+      })
+    }
+  }, [errors, setError])
 
   return (
     <>
@@ -44,19 +47,22 @@ const Profile = () => {
       <div className={styles.container}>
         <form onSubmit={handleSubmit(onSubmit)} className={styles.profileForm}>
           <div className={styles.formGroup}>
-            <label>Username:</label>
+            <label htmlFor="username">Username:</label>
             <input
+              id="username"
               type="text"
               {...register('username', { required: 'Username is required' })}
               disabled={loading}
+              className={formErrors.username ? styles.errorBorder : ''}
             />
-            {errors.username && (
-              <p className={styles.error}>{errors.username.message}</p>
+            {formErrors.username && (
+              <p className={styles.error}>{formErrors.username.message}</p>
             )}
           </div>
           <div className={styles.formGroup}>
-            <label>Email:</label>
+            <label htmlFor="email">Email:</label>
             <input
+              id="email"
               type="email"
               {...register('email', {
                 required: 'Email is required',
@@ -66,14 +72,16 @@ const Profile = () => {
                 },
               })}
               disabled={loading}
+              className={formErrors.email ? styles.errorBorder : ''}
             />
-            {errors.email && (
-              <p className={styles.error}>{errors.email.message}</p>
+            {formErrors.email && (
+              <p className={styles.error}>{formErrors.email.message}</p>
             )}
           </div>
           <div className={styles.formGroup}>
-            <label>New Password:</label>
+            <label htmlFor="newPassword">New Password:</label>
             <input
+              id="newPassword"
               type="password"
               {...register('newPassword', {
                 minLength: {
@@ -86,14 +94,16 @@ const Profile = () => {
                 },
               })}
               disabled={loading}
+              className={formErrors.newPassword ? styles.errorBorder : ''}
             />
-            {errors.newPassword && (
-              <p className={styles.error}>{errors.newPassword.message}</p>
+            {formErrors.newPassword && (
+              <p className={styles.error}>{formErrors.newPassword.message}</p>
             )}
           </div>
           <div className={styles.formGroup}>
-            <label>Avatar URL:</label>
+            <label htmlFor="avatar">Avatar URL:</label>
             <input
+              id="avatar"
               type="text"
               {...register('avatar', {
                 pattern: {
@@ -102,9 +112,10 @@ const Profile = () => {
                 },
               })}
               disabled={loading}
+              className={formErrors.avatar ? styles.errorBorder : ''}
             />
-            {errors.avatar && (
-              <p className={styles.error}>{errors.avatar.message}</p>
+            {formErrors.avatar && (
+              <p className={styles.error}>{formErrors.avatar.message}</p>
             )}
           </div>
           {successMessage && <p className={styles.success}>{successMessage}</p>}
