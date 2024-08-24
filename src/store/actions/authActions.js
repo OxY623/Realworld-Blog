@@ -16,7 +16,7 @@ export const signUpUser = (userData) => {
     try {
       const response = await fetchSingUp(userData)
       const data = response.data
-      localStorage.setItem('user', JSON.stringify(data))
+      //localStorage.setItem('user', JSON.stringify(data))
       localStorage.setItem('token', data.user.token)
 
       dispatch({
@@ -44,7 +44,7 @@ export const signInUser = (userData) => {
       const token = localStorage.getItem('token')
       const response = await fetchSignIn(userData, token)
       const data = response.data
-      //localStorage.setItem('user', JSON.stringify(data))
+      localStorage.setItem('user', JSON.stringify(data))
       //localStorage.setItem('token', data.user.token)
 
       dispatch({
