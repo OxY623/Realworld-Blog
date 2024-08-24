@@ -1,24 +1,32 @@
-import React from 'react'
-// import { useDispatch } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 
-//import { getArticles, setPage } from '../../store/actions/articlesActions'
-//import Header from '../Header'
-// import Article from '../Article'
-// import Pagination from '../Pagination'
+// Import pages
 import ArticlesPage from '../../pages/ArticlesPage'
 import ArticlePage from '../../pages/ArticlePage'
 import SignIn from '../../pages/SignIn'
 import Profile from '../../pages/Profile'
 import SignUp from '../../pages/SignUp'
+import LocalStorageAPI from '../../store/LocalStorageAPI'
+import { setUnloggedIn, getUser } from '../../store/actions/authActions'
 
 function App() {
-  const user = JSON.parse(localStorage.getItem('user')) || null
-  console.log(user)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    // Check token and dispatch appropriate actions
+    if (LocalStorageAPI.load('token')) {
+      dispatch(getUser())
+      //dispatch(setLoggedIn())
+    } else {
+      dispatch(setUnloggedIn())
+    }
+  }, [dispatch])
+
   return (
     <div className="app">
       <Router>
-        {/*<Header />*/}
         <Routes>
           <Route path="/" element={<ArticlesPage />} />
           <Route path="/articles" element={<ArticlesPage />} />

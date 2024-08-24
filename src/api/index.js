@@ -46,7 +46,7 @@ export const fetchSignIn = async (data, token) => {
     return await axios.post(`${API_URL}/users/login`, data, {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
     })
   } catch (error) {
@@ -54,16 +54,23 @@ export const fetchSignIn = async (data, token) => {
   }
 }
 
-export const fetchUpdateProfile = async (data, token) => {
-  // eslint-disable-next-line no-useless-catch
-  try {
-    return await axios.put(`${API_URL}/user`, data, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    })
-  } catch (error) {
-    throw error
-  }
+export const fetchUpdateProfile = (profileData) => {
+  const token = localStorage.getItem('token') // Получите токен из localStorage
+
+  return axios.put(`${API_URL}/user`, profileData, {
+    headers: {
+      Authorization: `Token ${token}`, // Передайте токен в заголовке Authorization
+      'Content-Type': 'application/json',
+    },
+  })
+}
+
+export const fetchGetUser = async () => {
+  const token = localStorage.getItem('token')
+  console.log(`Fetching user ${token}`)
+  return await axios.get(`${API_URL}/user`, {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
 }

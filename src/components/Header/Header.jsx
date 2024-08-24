@@ -10,26 +10,24 @@ import userLogo from './user_logo.svg'
 const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const [login, setLogin] = useState(false)
-  // const user = useSelector((state) => state.auth.user.user)
-  // const token = useSelector((state) => state.auth.user)
-
   const authState = useSelector((state) => state.auth)
-  const { user } = authState.user || {}
-  //const { token } = authState.user.token || {} //
+
+  // Деструктуризация user и token из состояния authState
+  const { user } = authState
+
+  // Проверка на наличие пользователя
+  const [login, setLogin] = useState(Boolean(user))
 
   useEffect(() => {
-    if (user) {
-      setLogin(true)
-    } else {
-      setLogin(false)
-    }
+    // Обновляем состояние login при изменении user
+    setLogin(Boolean(user))
   }, [user])
 
   const handleLogout = () => {
     dispatch(logout())
     navigate('/')
   }
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -41,7 +39,11 @@ const Header = () => {
         <div className={styles.secretWrapper}>
           <button className={styles.createArticle}>Create article</button>
           <div className={styles.userInfo}>
-            <span>{user ? user.username : 'User'}</span>
+            <Link className={styles.nameUser} to="/profile">
+              {user?.username || 'User'}
+            </Link>
+            {/*<span>{user?.username || 'User'}</span>{' '}*/}
+            {/* Использование optional chaining */}
             <Link to="/profile">
               <img
                 className={styles.userInfo_img}

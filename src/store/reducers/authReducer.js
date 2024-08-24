@@ -5,9 +5,11 @@ import {
   SIGNIN_REQUEST,
   SIGNIN_SUCCESS,
   SIGNIN_FAILURE,
+  FETCH_USER_SUCCESS,
   LOGOUT,
 } from '../actions/actionTypes'
 
+// Начальное состояние
 const initialState = {
   user: null,
   token: null,
@@ -15,7 +17,12 @@ const initialState = {
   error: null,
 }
 
+// Редуктор аутентификации
 const authReducer = (state = initialState, action) => {
+  // Логирование для отладки
+  console.log('Action:', action)
+  console.log('State before:', state)
+
   switch (action.type) {
     case SIGNUP_REQUEST:
       return {
@@ -23,34 +30,63 @@ const authReducer = (state = initialState, action) => {
         loading: true,
         error: null,
       }
+
     case SIGNUP_SUCCESS:
+      // Логирование для отладки
+      console.log('SIGNUP_SUCCESS Payload:', action.payload)
+
       return {
         ...state,
         loading: false,
-        user: action.payload.user,
-        //token: action.payload.user.token,
+        user: action.payload?.user, //|| state.user, // Используйте значения по умолчанию
+        //token: action.payload?.token || state.token, // Добавьте если нужно
       }
+
     case SIGNUP_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload,
+        error: action.payload || state.error,
       }
 
     case SIGNIN_REQUEST:
-      return { ...state, loading: true, error: null }
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      }
+
     case SIGNIN_SUCCESS:
+      // Логирование для отладки
+      console.log('SIGNIN_SUCCESS Payload:', action.payload)
+
       return {
         ...state,
         loading: false,
-        user: action.payload,
-        token: action.payload.token,
+        user: action.payload?.user || state.user,
+        token: action.payload?.token || state.token,
       }
+
     case SIGNIN_FAILURE:
-      return { ...state, loading: false, error: action.payload }
+      return {
+        ...state,
+        loading: false,
+        error: action.payload || state.error,
+      }
 
     case LOGOUT:
-      return { ...state, user: null, token: null }
+      return {
+        ...state,
+        user: null,
+        token: null,
+      }
+    case FETCH_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        user: action.payload?.user || state.user,
+        token: action.payload?.token || state.token,
+      }
 
     default:
       return state

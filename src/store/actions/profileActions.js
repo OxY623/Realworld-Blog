@@ -7,14 +7,14 @@ import {
   UPDATE_PROFILE_FAILURE,
 } from './actionTypes'
 
-export const updateProfile = (data) => async (dispatch, getState) => {
+export const updateProfile = (data) => async (dispatch) => {
   dispatch({ type: UPDATE_PROFILE_REQUEST })
-  const state = getState()
-  const token = state.auth?.user?.user?.token
-  console.log(token)
-  console.log(data)
+  // const state = getState()
+  // const token = state.auth?.user?.user?.token
+  // console.log(token)
+  // console.log(data)
   try {
-    const response = await fetchUpdateProfile(data, token)
+    const response = await fetchUpdateProfile(data)
     dispatch({
       type: UPDATE_PROFILE_SUCCESS,
       payload: response.data,

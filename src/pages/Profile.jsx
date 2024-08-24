@@ -4,6 +4,8 @@ import { useForm } from 'react-hook-form'
 
 import { updateProfile } from '../store/actions/profileActions'
 import Header from '../components/Header'
+import FormHeader from '../components/FormHeader'
+import Button from '../components/FormButton/FormButton'
 
 import styles from './Profile.module.scss'
 
@@ -45,84 +47,92 @@ const Profile = () => {
     <>
       <Header />
       <div className={styles.container}>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.profileForm}>
-          <div className={styles.formGroup}>
-            <label htmlFor="username">Username:</label>
-            <input
-              id="username"
-              type="text"
-              {...register('username', { required: 'Username is required' })}
-              disabled={loading}
-              className={formErrors.username ? styles.errorBorder : ''}
-            />
-            {formErrors.username && (
-              <p className={styles.error}>{formErrors.username.message}</p>
+        <div className={styles.profileForm}>
+          <FormHeader title="Profile" styles={styles} />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className={styles.formGroup}>
+              <label htmlFor="username">Username:</label>
+              <input
+                id="username"
+                type="text"
+                {...register('username', { required: 'Username is required' })}
+                disabled={loading}
+                className={formErrors.username ? styles.errorBorder : ''}
+              />
+              {formErrors.username && (
+                <p className={styles.error}>{formErrors.username.message}</p>
+              )}
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="email">Email:</label>
+              <input
+                id="email"
+                type="email"
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: 'Invalid email',
+                  },
+                })}
+                disabled={loading}
+                className={formErrors.email ? styles.errorBorder : ''}
+              />
+              {formErrors.email && (
+                <p className={styles.error}>{formErrors.email.message}</p>
+              )}
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="newPassword">New Password:</label>
+              <input
+                id="newPassword"
+                type="password"
+                {...register('newPassword', {
+                  minLength: {
+                    value: 6,
+                    message: 'Password must be at least 6 characters',
+                  },
+                  maxLength: {
+                    value: 40,
+                    message: 'Password cannot exceed 40 characters',
+                  },
+                })}
+                disabled={loading}
+                className={formErrors.newPassword ? styles.errorBorder : ''}
+              />
+              {formErrors.newPassword && (
+                <p className={styles.error}>{formErrors.newPassword.message}</p>
+              )}
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="avatar">Avatar URL:</label>
+              <input
+                id="avatar"
+                type="text"
+                {...register('avatar', {
+                  pattern: {
+                    value: /^https?:\/\/[^\s]+$/,
+                    message: 'Invalid URL',
+                  },
+                })}
+                disabled={loading}
+                className={formErrors.avatar ? styles.errorBorder : ''}
+              />
+              {formErrors.avatar && (
+                <p className={styles.error}>{formErrors.avatar.message}</p>
+              )}
+            </div>
+            {successMessage && (
+              <p className={styles.success}>{successMessage}</p>
             )}
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="email">Email:</label>
-            <input
-              id="email"
-              type="email"
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Invalid email',
-                },
-              })}
-              disabled={loading}
-              className={formErrors.email ? styles.errorBorder : ''}
-            />
-            {formErrors.email && (
-              <p className={styles.error}>{formErrors.email.message}</p>
-            )}
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="newPassword">New Password:</label>
-            <input
-              id="newPassword"
-              type="password"
-              {...register('newPassword', {
-                minLength: {
-                  value: 6,
-                  message: 'Password must be at least 6 characters',
-                },
-                maxLength: {
-                  value: 40,
-                  message: 'Password cannot exceed 40 characters',
-                },
-              })}
-              disabled={loading}
-              className={formErrors.newPassword ? styles.errorBorder : ''}
-            />
-            {formErrors.newPassword && (
-              <p className={styles.error}>{formErrors.newPassword.message}</p>
-            )}
-          </div>
-          <div className={styles.formGroup}>
-            <label htmlFor="avatar">Avatar URL:</label>
-            <input
-              id="avatar"
-              type="text"
-              {...register('avatar', {
-                pattern: {
-                  value: /^https?:\/\/[^\s]+$/,
-                  message: 'Invalid URL',
-                },
-              })}
-              disabled={loading}
-              className={formErrors.avatar ? styles.errorBorder : ''}
-            />
-            {formErrors.avatar && (
-              <p className={styles.error}>{formErrors.avatar.message}</p>
-            )}
-          </div>
-          {successMessage && <p className={styles.success}>{successMessage}</p>}
-          <button type="submit" disabled={loading}>
-            {loading ? 'Updating...' : 'Update Profile'}
-          </button>
-        </form>
+            {/*<button type="submit" disabled={loading}>*/}
+            {/*  {loading ? 'Updating...' : 'Update Profile'}*/}
+            {/*</button>*/}
+            <Button type="submit" loading={loading}>
+              Save
+            </Button>
+          </form>
+        </div>
       </div>
     </>
   )
