@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import { Navigate } from 'react-router-dom'
 
-import { updateProfile } from '../store/actions/profileActions'
+import { updateUser } from '../store/actions/authActions'
 import Header from '../components/Header'
 import FormHeader from '../components/FormHeader'
 import Button from '../components/FormButton/FormButton'
@@ -10,9 +11,10 @@ import Button from '../components/FormButton/FormButton'
 import styles from './Profile.module.scss'
 
 const Profile = () => {
+  const [redirect, setRedirect] = useState(false)
   const dispatch = useDispatch()
-  const { loading, successMessage, errors } = useSelector(
-    (state) => state.profile,
+  const { user, loading, error, updateUserSuccess } = useSelector(
+    (state) => state.auth,
   )
 
   const {
@@ -20,28 +22,53 @@ const Profile = () => {
     handleSubmit,
     formState: { errors: formErrors },
     setError,
+    reset,
   } = useForm()
 
   const onSubmit = (data) => {
-    dispatch(updateProfile(data))
+    const ServerData = {
+      user: {
+        email: 'fuzzydoo45rproductions0@gmail.com',
+        username: 'artem26245',
+        bio: 'I love SPB.',
+        image:
+          'https://avatars.mds.yandex.net/i?id=df101efcb87c856cf747bf00201eecc5_sr-4613694-images-thumbs&n=13',
+      },
+    }
+    dispatch(updateUser(ServerData))
   }
 
   useEffect(() => {
-    if (successMessage) {
+    if (updateUserSuccess) {
+      console.log(updateUserSuccess)
       const timer = setTimeout(() => {
-        dispatch({ type: 'CLEAR_SUCCESS_MESSAGE' })
-      }, 5000)
+        dispatch({ type: 'CLEAR_UPDATE_USER_SUCCESS' })
+        setRedirect(true)
+      }, 3000)
       return () => clearTimeout(timer)
     }
-  }, [successMessage, dispatch])
+  }, [updateUserSuccess, dispatch])
 
   useEffect(() => {
-    if (errors) {
-      Object.entries(errors).forEach(([field, message]) => {
+    if (error) {
+      Object.entries(error).forEach(([field, message]) => {
         setError(field, { type: 'manual', message })
       })
     }
-  }, [errors, setError])
+  }, [error, setError])
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        username: user.username || '',
+        email: user.email || '',
+      })
+    }
+  }, [user, reset])
+
+  if (redirect) {
+    return <Navigate to="/" />
+  }
 
   return (
     <>
@@ -122,12 +149,11 @@ const Profile = () => {
                 <p className={styles.error}>{formErrors.avatar.message}</p>
               )}
             </div>
-            {successMessage && (
-              <p className={styles.success}>{successMessage}</p>
+            {updateUserSuccess && (
+              <p className={styles.success}>
+                Данные были успешно обновлены. Подождите...
+              </p>
             )}
-            {/*<button type="submit" disabled={loading}>*/}
-            {/*  {loading ? 'Updating...' : 'Update Profile'}*/}
-            {/*</button>*/}
             <Button type="submit" loading={loading}>
               Save
             </Button>

@@ -1,33 +1,37 @@
-import { fetchSingUp, fetchSignIn, fetchGetUser } from '../../api'
+import {
+  fetchSingUp,
+  fetchSignIn,
+  getCurrentUser,
+  updateCurrentUser,
+} from '../../api'
 
 import {
-  SIGNUP_REQUEST,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAILURE,
-  SIGNIN_REQUEST,
-  SIGNIN_SUCCESS,
-  SIGNIN_FAILURE,
+  AUTH_REQUEST,
+  AUTH_FAILURE,
+  AUTH_SUCCESS,
   LOGOUT,
   FETCH_USER_SUCCESS,
-  FETCH_USER_FAILURE,
+  SET_TOKEN,
+  UPDATE_USER_SUCCESS,
 } from './actionTypes'
 
 export const signUpUser = (userData) => {
   return async (dispatch) => {
-    dispatch({ type: SIGNUP_REQUEST })
+    dispatch({ type: AUTH_REQUEST })
     try {
       const response = await fetchSingUp(userData)
-      const data = response.data
-      localStorage.setItem('token', data.user.token) // Store token
+      const token = response.data.user.token
+      dispatch({ type: SET_TOKEN, payload: { token } })
 
       dispatch({
-        type: SIGNUP_SUCCESS,
-        payload: data,
+        type: AUTH_SUCCESS,
+        payload: response.data,
       })
     } catch (error) {
       dispatch({
-        type: SIGNUP_FAILURE,
-        payload: error.response?.data.errors || 'Unexpected error occurred',
+        type: AUTH_FAILURE,
+        payload:
+          error.response?.data.errors || 'Произошла непредвиденная ошибка',
       })
     }
   }
@@ -35,44 +39,58 @@ export const signUpUser = (userData) => {
 
 export const signInUser = (userData) => {
   return async (dispatch) => {
-    dispatch({ type: SIGNIN_REQUEST })
+    dispatch({ type: AUTH_REQUEST })
     try {
       const response = await fetchSignIn(userData)
-      const data = response.data
-      localStorage.setItem('token', data.user.token) // Store token
+      const token = response.data.user.token
+      dispatch({ type: SET_TOKEN, payload: { token } })
 
       dispatch({
-        type: SIGNIN_SUCCESS,
-        payload: data,
+        type: AUTH_SUCCESS,
+        payload: response.data,
       })
     } catch (error) {
       dispatch({
-        type: SIGNIN_FAILURE,
-        payload: error.response?.data.errors || 'Unexpected error occurred',
+        type: AUTH_FAILURE,
+        payload:
+          error.response?.data.errors || 'Произошла непредвиденная ошибка',
       })
     }
   }
 }
 
 export const logout = () => (dispatch) => {
-  //localStorage.removeItem('token')
   dispatch({ type: LOGOUT })
 }
 
 export const getUser = () => async (dispatch) => {
   try {
-    const response = await fetchGetUser()
+    const response = await getCurrentUser()
+    const token = response.data.user.token
+    dispatch({ type: SET_TOKEN, payload: { token } })
     dispatch({ type: FETCH_USER_SUCCESS, payload: response.data })
   } catch (error) {
     dispatch({
-      type: FETCH_USER_FAILURE,
-      error: error.message || 'Failed to fetch user',
+      type: AUTH_FAILURE,
+      error:
+        error.message ||
+        'Произошла непредвиденная ошибка, из-за которой не удалось получить пользователя',
     })
   }
 }
 
-// Action to set the user as logged in
-export const setLoggedIn = (data) => ({ type: SIGNIN_SUCCESS, payload: data })
-
-// Action to set the user as logged out
-export const setUnloggedIn = () => ({ type: LOGOUT })
+export const updateUser = (userData) => {
+  return async (dispatch) => {
+    try {
+      const response = await updateCurrentUser(userData)
+      dispatch({ type: UPDATE_USER_SUCCESS, payload: response.data })
+    } catch (error) {
+      dispatch({
+        type: AUTH_FAILURE,
+        error:
+          error.message ||
+          'Произошла непредвиденная ошибка, из-за которой не удалось получить пользователя',
+      })
+    }
+  }
+}

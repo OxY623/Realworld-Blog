@@ -1,3 +1,5 @@
+import { SET_TOKEN } from './actions/actionTypes'
+
 const LocalStorageAPI = {
   save(key, value) {
     localStorage.setItem(key, value)
@@ -9,8 +11,8 @@ const LocalStorageAPI = {
     localStorage.removeItem(key)
   },
   saveTokenMiddleware: (store) => (next) => (action) => {
-    if (action.type === 'SET_TOKEN') {
-      LocalStorageAPI.save('token', action.token)
+    if (action.type === SET_TOKEN) {
+      LocalStorageAPI.save('token', action.payload.token)
     }
     return next(action)
   },

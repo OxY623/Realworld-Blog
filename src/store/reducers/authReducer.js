@@ -1,91 +1,82 @@
 import {
-  SIGNUP_REQUEST,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAILURE,
-  SIGNIN_REQUEST,
-  SIGNIN_SUCCESS,
-  SIGNIN_FAILURE,
+  AUTH_REQUEST,
+  AUTH_SUCCESS,
+  AUTH_FAILURE,
   FETCH_USER_SUCCESS,
+  UPDATE_USER_SUCCESS,
+  CLEAR_UPDATE_USER_SUCCESS,
   LOGOUT,
 } from '../actions/actionTypes'
 
-// Начальное состояние
 const initialState = {
   user: null,
-  token: null,
+  isAuthenticated: false,
+  updateUserSuccess: false,
   loading: false,
   error: null,
 }
 
-// Редуктор аутентификации
 const authReducer = (state = initialState, action) => {
   // Логирование для отладки
   console.log('Action:', action)
   console.log('State before:', state)
 
   switch (action.type) {
-    case SIGNUP_REQUEST:
+    case AUTH_REQUEST:
       return {
         ...state,
         loading: true,
         error: null,
       }
 
-    case SIGNUP_SUCCESS:
+    case AUTH_SUCCESS:
       // Логирование для отладки
-      console.log('SIGNUP_SUCCESS Payload:', action.payload)
+      console.log('SIGNUP/SIGNIN SUCCESS Payload:', action.payload)
 
       return {
         ...state,
         loading: false,
-        user: action.payload?.user, //|| state.user, // Используйте значения по умолчанию
-        //token: action.payload?.token || state.token, // Добавьте если нужно
+        user: action.payload?.user,
+        updateUser: true,
+        isAuthenticated: !!action.payload?.user, // Если пользователь есть, то isAuthenticated = true
       }
 
-    case SIGNUP_FAILURE:
+    case AUTH_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload || state.error,
-      }
-
-    case SIGNIN_REQUEST:
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      }
-
-    case SIGNIN_SUCCESS:
-      // Логирование для отладки
-      console.log('SIGNIN_SUCCESS Payload:', action.payload)
-
-      return {
-        ...state,
-        loading: false,
-        user: action.payload?.user || state.user,
-        token: action.payload?.token || state.token,
-      }
-
-    case SIGNIN_FAILURE:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload || state.error,
+        isAuthenticated: false, // В случае ошибки сбрасываем аутентификацию
       }
 
     case LOGOUT:
       return {
         ...state,
         user: null,
-        token: null,
+        isAuthenticated: false, // Пользователь выходит, сбрасываем аутентификацию
       }
+
     case FETCH_USER_SUCCESS:
       return {
         ...state,
         loading: false,
         user: action.payload?.user || state.user,
-        token: action.payload?.token || state.token,
+        isAuthenticated: !!(action.payload?.user || state.user), // Проверка существования пользователя
+      }
+
+    case UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        updateUserSuccess: true,
+        user: action.payload?.user || state.user, // Обновляем данные пользователя после изменения
+      }
+
+    case CLEAR_UPDATE_USER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        updateUserSuccess: false,
       }
 
     default:

@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import LocalStorageAPI from '../store/LocalStorageAPI'
+
 const API_URL = 'https://blog.kata.academy/api/'
 
 export const fetchArticles = async (page = 1) => {
@@ -46,7 +48,6 @@ export const fetchSignIn = async (data, token) => {
     return await axios.post(`${API_URL}/users/login`, data, {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${token}`,
       },
     })
   } catch (error) {
@@ -54,23 +55,48 @@ export const fetchSignIn = async (data, token) => {
   }
 }
 
-export const fetchUpdateProfile = (profileData) => {
-  const token = localStorage.getItem('token') // Получите токен из localStorage
-
-  return axios.put(`${API_URL}/user`, profileData, {
-    headers: {
-      Authorization: `Token ${token}`, // Передайте токен в заголовке Authorization
-      'Content-Type': 'application/json',
-    },
-  })
+export const fetchUpdateProfile = (data) => {
+  const token = LocalStorageAPI.load('token')
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return axios.put(`${API_URL}/user`, data, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+  } catch (error) {
+    throw error
+  }
 }
 
-export const fetchGetUser = async () => {
-  const token = localStorage.getItem('token')
-  console.log(`Fetching user ${token}`)
-  return await axios.get(`${API_URL}/user`, {
-    headers: {
-      Authorization: `Token ${token}`,
-    },
-  })
+export const getCurrentUser = async () => {
+  const token = LocalStorageAPI.load('token')
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.get(`${API_URL}/user`, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+  } catch (error) {
+    throw error
+  }
+}
+
+export const updateCurrentUser = async (data) => {
+  console.log(data)
+  const token = LocalStorageAPI.load('token')
+  try {
+    return await axios.put(`${API_URL}user`, data, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+  } catch (error) {
+    console.error('Failed to update user:', error.response || error.message)
+    throw error
+  }
 }
