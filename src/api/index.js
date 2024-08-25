@@ -4,6 +4,27 @@ import LocalStorageAPI from '../store/LocalStorageAPI'
 
 const API_URL = 'https://blog.kata.academy/api/'
 
+export const formatData = (data) => {
+  const filteredData = Object.entries(data).reduce((acc, [key, value]) => {
+    if (
+      value !== null &&
+      value !== undefined &&
+      value !== '' &&
+      !(Array.isArray(value) && value.length === 0) &&
+      !(typeof value === 'object' && Object.keys(value).length === 0)
+    ) {
+      acc[key] = value
+    }
+    return acc
+  }, {})
+
+  return {
+    user: {
+      ...filteredData,
+    },
+  }
+}
+
 export const fetchArticles = async (page = 1) => {
   // eslint-disable-next-line no-useless-catch
   try {

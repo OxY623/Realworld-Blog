@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { Navigate } from 'react-router-dom'
 
 import { updateUser } from '../store/actions/authActions'
+import { formatData } from '../api'
 import Header from '../components/Header'
 import FormHeader from '../components/FormHeader'
 import Button from '../components/FormButton/FormButton'
@@ -26,21 +27,13 @@ const Profile = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    const ServerData = {
-      user: {
-        email: 'fuzzydoo45rproductions0@gmail.com',
-        username: 'artem26245',
-        bio: 'I love SPB.',
-        image:
-          'https://avatars.mds.yandex.net/i?id=df101efcb87c856cf747bf00201eecc5_sr-4613694-images-thumbs&n=13',
-      },
-    }
-    dispatch(updateUser(ServerData))
+    data = formatData(data)
+    dispatch(updateUser(data))
   }
 
   useEffect(() => {
     if (updateUserSuccess) {
-      console.log(updateUserSuccess)
+      //console.log(updateUserSuccess)
       const timer = setTimeout(() => {
         dispatch({ type: 'CLEAR_UPDATE_USER_SUCCESS' })
         setRedirect(true)
@@ -91,7 +84,7 @@ const Profile = () => {
               )}
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="email">Email:</label>
+              <label htmlFor="email">Email address:</label>
               <input
                 id="email"
                 type="email"
@@ -132,21 +125,21 @@ const Profile = () => {
               )}
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="avatar">Avatar URL:</label>
+              <label htmlFor="image">Avatar image (url):</label>
               <input
-                id="avatar"
+                id="image"
                 type="text"
-                {...register('avatar', {
+                {...register('image', {
                   pattern: {
                     value: /^https?:\/\/[^\s]+$/,
                     message: 'Invalid URL',
                   },
                 })}
                 disabled={loading}
-                className={formErrors.avatar ? styles.errorBorder : ''}
+                className={formErrors.image ? styles.errorBorder : ''}
               />
-              {formErrors.avatar && (
-                <p className={styles.error}>{formErrors.avatar.message}</p>
+              {formErrors.image && (
+                <p className={styles.error}>{formErrors.image.message}</p>
               )}
             </div>
             {updateUserSuccess && (

@@ -7,6 +7,7 @@ import Header from '../components/Header'
 import FormHeader from '../components/FormHeader'
 import Button from '../components/FormButton/FormButton'
 import { signUpUser } from '../store/actions/authActions'
+import { formatData } from '../api'
 
 import styles from './SignUp.module.scss'
 
@@ -25,15 +26,9 @@ const SignUp = () => {
   const title = 'Create new account'
 
   const onSubmit = (data) => {
-    const serverData = {
-      user: {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      },
-    }
-
-    dispatch(signUpUser(serverData))
+    const { repeatPassword, ...filteredData } = data
+    data = formatData(filteredData)
+    dispatch(signUpUser(data))
   }
 
   useEffect(() => {

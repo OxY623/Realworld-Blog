@@ -7,6 +7,7 @@ import { signInUser } from '../store/actions/authActions'
 import Header from '../components/Header'
 import FormHeader from '../components/FormHeader'
 import Button from '../components/FormButton/FormButton'
+import { formatData } from '../api'
 
 import styles from './SignIn.module.scss'
 
@@ -27,13 +28,8 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     try {
-      const serverData = {
-        user: {
-          email: data.email,
-          password: data.password,
-        },
-      }
-      await dispatch(signInUser(serverData))
+      data = formatData(data)
+      await dispatch(signInUser(data))
       setRedirect(true)
     } catch (err) {
       if (err.payload && err.payload.errors) {
