@@ -1,5 +1,8 @@
-.signInForm {
+.container {
   margin: 0 auto;
+}
+
+.profileForm {
   font-family: 'Roboto', sans-serif;
   max-width: 384px;
   margin: 0 auto;
@@ -18,9 +21,12 @@
 label {
   display: block;
   margin-bottom: 5px;
+  //font-weight: bold;
 }
 
-input {
+input[type='text'],
+input[type='email'],
+input[type='password'] {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
@@ -29,6 +35,16 @@ input {
 
 input:disabled {
   background-color: #e0e0e0;
+}
+
+
+input[type=email], input[type=text], input[type=password] {
+  color: rgba(0, 0, 0, 0.75) !important;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0;
+  text-align: left;
 }
 
 .error {
@@ -44,35 +60,9 @@ input:disabled {
   background: rgb(255, 255, 255);
 }
 
-.checkboxLabel {
-  color: #f50202;
+.success {
+  color: green;
+  font-size: 0.875rem;
+  margin-top: 10px;
 }
 
-.footer {
-  padding-top: 8px;
-  color: rgb(140, 140, 140);
-  font-family: 'Roboto', sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 20px;
-  letter-spacing: 0;
-  text-align: center;
-
-  .link {
-    color: rgb(24, 144, 255);
-    text-decoration: none;
-    &:hover {
-      color: rgb(24, 144, 255);
-    }
-  }
-}
-
-
-//button:disabled {
-//  background-color: #a0a0a0;
-//  cursor: not-allowed;
-//}
-//
-//button:hover:not(:disabled) {
-//  background-color: #0056b3;
-//}

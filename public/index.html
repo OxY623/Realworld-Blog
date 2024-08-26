@@ -12,8 +12,20 @@
     <link rel="stylesheet" href="./normalize/reset/reset.css" />
 
     <title>Realworld Blog</title>
+    <style>
+        p {
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+    </style>
   </head>
   <body>
     <div id="root"></div>
+  <script>
+    document.querySelectorAll('p').forEach(function(p) {
+      p.innerHTML = p.innerHTML.replace(/\s+/g, ' ').replace(/\u00A0+/g, ' ').trim();
+    });
+  </script>
   </body>
 </html>

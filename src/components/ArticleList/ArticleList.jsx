@@ -8,6 +8,8 @@ import { getArticles, setPage } from '../../store/actions/articlesActions'
 // import Pagination from '../Pagination'
 import ArticleCard from '../ArticleCard'
 import Spinner from '../Spinner'
+import ErrorMessage from '../ErrorMessage/ErrorMessage'
+import NotFound from '../NotFound'
 
 import styles from './ArticleList.module.scss'
 
@@ -30,14 +32,23 @@ const ArticleList = () => {
         <Spinner />
       </div>
     )
-  if (error) return <div>Error: {error}</div>
+  if (error)
+    return (
+      <div>
+        {' '}
+        <ErrorMessage message={error} />
+      </div>
+    )
 
   return (
     <div className={styles.articleList}>
       <div className={styles.container}>
         {/*<ArticleCard />*/}
         {articles.length === 0 ? (
-          <div>No articles found</div>
+          <div>
+            {' '}
+            <NotFound />
+          </div>
         ) : (
           articles.map((article) => (
             // eslint-disable-next-line react/jsx-key

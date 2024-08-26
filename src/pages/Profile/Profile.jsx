@@ -3,16 +3,19 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
 import { Navigate } from 'react-router-dom'
 
-import { updateUser } from '../store/actions/authActions'
-import { formatData } from '../api'
-import Header from '../components/Header'
-import FormHeader from '../components/FormHeader'
-import Button from '../components/FormButton/FormButton'
+import { updateUser } from '../../store/actions/authActions'
+import { formatData } from '../../api'
+import Header from '../../components/Header'
+import FormHeader from '../../components/FormHeader'
+import Button from '../../components/FormButton/FormButton'
 
 import styles from './Profile.module.scss'
 
 const Profile = () => {
   const [redirect, setRedirect] = useState(false)
+  const stringsArray = ['Avatar image', 'e.g., https://example.com/image.jpg']
+  const randomStringPlaceholder =
+    stringsArray[Math.floor(Math.random() * stringsArray.length)]
   const dispatch = useDispatch()
   const { user, loading, error, updateUserSuccess } = useSelector(
     (state) => state.auth,
@@ -68,16 +71,17 @@ const Profile = () => {
       <Header />
       <div className={styles.container}>
         <div className={styles.profileForm}>
-          <FormHeader title="Profile" styles={styles} />
+          <FormHeader title="Edit Profile" styles={styles} />
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className={styles.formGroup}>
               <label htmlFor="username">Username:</label>
               <input
+                placeholder="Username"
+                className={formErrors.username ? styles.errorBorder : ''}
                 id="username"
                 type="text"
                 {...register('username', { required: 'Username is required' })}
                 disabled={loading}
-                className={formErrors.username ? styles.errorBorder : ''}
               />
               {formErrors.username && (
                 <p className={styles.error}>{formErrors.username.message}</p>
@@ -86,6 +90,7 @@ const Profile = () => {
             <div className={styles.formGroup}>
               <label htmlFor="email">Email address:</label>
               <input
+                placeholder="Email address"
                 id="email"
                 type="email"
                 {...register('email', {
@@ -103,11 +108,12 @@ const Profile = () => {
               )}
             </div>
             <div className={styles.formGroup}>
-              <label htmlFor="newPassword">New Password:</label>
+              <label htmlFor="password">New Password:</label>
               <input
-                id="newPassword"
+                placeholder="New Password"
+                id="password"
                 type="password"
-                {...register('newPassword', {
+                {...register('password', {
                   minLength: {
                     value: 6,
                     message: 'Password must be at least 6 characters',
@@ -118,15 +124,16 @@ const Profile = () => {
                   },
                 })}
                 disabled={loading}
-                className={formErrors.newPassword ? styles.errorBorder : ''}
+                className={formErrors.password ? styles.errorBorder : ''}
               />
-              {formErrors.newPassword && (
-                <p className={styles.error}>{formErrors.newPassword.message}</p>
+              {formErrors.password && (
+                <p className={styles.error}>{formErrors.password.message}</p>
               )}
             </div>
             <div className={styles.formGroup}>
               <label htmlFor="image">Avatar image (url):</label>
               <input
+                placeholder={randomStringPlaceholder}
                 id="image"
                 type="text"
                 {...register('image', {

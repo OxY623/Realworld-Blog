@@ -2,7 +2,8 @@ import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from '@redux-devtools/extension'
 import { thunk } from 'redux-thunk'
 
-import LocalStorageAPI from './LocalStorageAPI'
+import LocalStorageAPI from '../api/LocalStorageAPI'
+
 import rootReducer from './reducers'
 
 const store = createStore(

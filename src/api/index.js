@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import LocalStorageAPI from '../store/LocalStorageAPI'
+import LocalStorageAPI from './LocalStorageAPI'
 
 const API_URL = 'https://blog.kata.academy/api/'
 
@@ -22,6 +22,61 @@ export const formatData = (data) => {
     user: {
       ...filteredData,
     },
+  }
+}
+
+export const fetchCreateArticle = async (articleData) => {
+  const token = LocalStorageAPI.load('token')
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.post(
+      `${API_URL}/articles`,
+      { article: articleData }, // Данные статьи обернуты в объект с ключом "article"
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  } catch (error) {
+    throw error
+  }
+}
+
+export const fetchUpdateArticle = async (slug, articleData) => {
+  const token = LocalStorageAPI.load('token')
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.put(
+      `${API_URL}/articles/${slug}`,
+      { article: articleData }, // Данные статьи обернуты в объект с ключом "article"
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    )
+  } catch (error) {
+    throw error
+  }
+}
+
+export const fetchDeleteArticle = async (slug) => {
+  const token = LocalStorageAPI.load('token')
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.delete(`${API_URL}/articles/${slug}`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+  } catch (error) {
+    throw error
   }
 }
 
@@ -63,7 +118,7 @@ export const fetchSingUp = async (data) => {
   }
 }
 
-export const fetchSignIn = async (data, token) => {
+export const fetchSignIn = async (data) => {
   // eslint-disable-next-line no-useless-catch
   try {
     return await axios.post(`${API_URL}/users/login`, data, {

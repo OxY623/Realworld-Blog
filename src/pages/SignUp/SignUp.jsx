@@ -3,11 +3,11 @@ import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate } from 'react-router-dom'
 
-import Header from '../components/Header'
-import FormHeader from '../components/FormHeader'
-import Button from '../components/FormButton/FormButton'
-import { signUpUser } from '../store/actions/authActions'
-import { formatData } from '../api'
+import Header from '../../components/Header'
+import FormHeader from '../../components/FormHeader'
+import Button from '../../components/FormButton/FormButton'
+import { signUpUser } from '../../store/actions/authActions'
+import { formatData } from '../../api'
 
 import styles from './SignUp.module.scss'
 

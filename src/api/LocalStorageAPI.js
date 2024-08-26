@@ -1,4 +1,4 @@
-import { SET_TOKEN } from './actions/actionTypes'
+import { SET_TOKEN } from '../store/actions/actionTypes'
 
 const LocalStorageAPI = {
   save(key, value) {

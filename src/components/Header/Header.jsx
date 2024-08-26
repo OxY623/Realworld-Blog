@@ -18,6 +18,10 @@ const Header = () => {
     navigate('/')
   }
 
+  const handleCreateArticle = () => {
+    navigate('/new-article') // Абсолютный путь
+  }
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -27,7 +31,12 @@ const Header = () => {
       </div>
       {authState ? (
         <div className={styles.secretWrapper}>
-          <button className={styles.createArticle}>Create article</button>
+          <button
+            className={styles.createArticle}
+            onClick={handleCreateArticle}
+          >
+            Create article
+          </button>
           <div className={styles.userInfo}>
             <Link className={styles.nameUser} to="/profile">
               {user?.username || 'User'}
