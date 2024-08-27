@@ -7,7 +7,6 @@ import {
   Routes,
 } from 'react-router-dom'
 
-// Import pages
 import ArticlesPage from '../../pages/ArticlesPage'
 import ArticlePage from '../../pages/ArticlePage'
 import SignIn from '../../pages/SignIn'
@@ -50,6 +49,7 @@ function App() {
         {/*    </div>*/}
         {/*  }*/}
         {/*>*/}
+
         <Routes>
           <Route path="/" element={<ArticlesPage />} />
           <Route path="/new-article" element={<NewArticle />} />

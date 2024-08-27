@@ -118,11 +118,20 @@ export const deleteArticle = (slug) => async (dispatch) => {
 }
 
 // Thunk для получения одной статьи по ID
-export const fetchArticleById = (id) => async (dispatch) => {
-  dispatch(fetchArticleRequest())
+// export const fetchArticleById = (id) => async (dispatch) => {
+//   dispatch(fetchArticleRequest())
+//   try {
+//     const article = await fetchArticle(id)
+//     dispatch(fetchArticleSuccess(article))
+//   } catch (error) {
+//     dispatch(fetchArticleFailure(error.message))
+//   }
+// }
+export const fetchArticleById = (slug) => async (dispatch) => {
   try {
-    const article = await fetchArticle(id)
-    dispatch(fetchArticleSuccess(article))
+    const response = await fetchArticle(slug)
+    //console.log(response)
+    dispatch(fetchArticleSuccess(response))
   } catch (error) {
     dispatch(fetchArticleFailure(error.message))
   }

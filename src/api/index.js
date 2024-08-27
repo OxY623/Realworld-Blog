@@ -164,6 +164,7 @@ export const getCurrentUser = async () => {
 export const updateCurrentUser = async (data) => {
   console.log(data)
   const token = LocalStorageAPI.load('token')
+  // eslint-disable-next-line no-useless-catch
   try {
     return await axios.put(`${API_URL}user`, data, {
       headers: {
@@ -172,7 +173,6 @@ export const updateCurrentUser = async (data) => {
       },
     })
   } catch (error) {
-    console.error('Failed to update user:', error.response || error.message)
     throw error
   }
 }

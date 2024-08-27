@@ -44,19 +44,29 @@ const Article = () => {
       </div>
     )
 
-  if (error)
-    return (
-      <div>
-        <ErrorMessage message={error} />
-      </div>
-    )
-
-  if (!article)
+  if (error && !article) {
     return (
       <div>
         <NotFound />
       </div>
     )
+  } else if (error) {
+    return <ErrorMessage message={error} />
+  }
+
+  if (!article && !loading) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    )
+  } else if (!article) {
+    return (
+      <div>
+        <NotFound />
+      </div>
+    )
+  }
 
   return (
     <div className={styles.container}>

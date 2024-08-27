@@ -18,8 +18,8 @@ const initialState = {
 
 const authReducer = (state = initialState, action) => {
   // Логирование для отладки
-  console.log('Action:', action)
-  console.log('State before:', state)
+  //console.log('Action:', action)
+  //console.log('State before:', state)
 
   switch (action.type) {
     case AUTH_REQUEST:
@@ -31,7 +31,7 @@ const authReducer = (state = initialState, action) => {
 
     case AUTH_SUCCESS:
       // Логирование для отладки
-      console.log('SIGNUP/SIGNIN SUCCESS Payload:', action.payload)
+      //console.log('SIGNUP/SIGNIN SUCCESS Payload:', action.payload)
 
       return {
         ...state,

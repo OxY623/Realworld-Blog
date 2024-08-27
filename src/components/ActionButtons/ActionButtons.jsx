@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { deleteArticle } from '../../store/actions/articlesActions'
+import { deleteArticle, getArticles } from '../../store/actions/articlesActions'
 
 import styles from './ActionButtons.module.scss'
 import warning from './Frame 19.svg'
@@ -30,7 +30,12 @@ const ActionButtons = () => {
 
   const confirmDelete = useCallback(() => {
     dispatch(deleteArticle(article.slug))
-      .then(() => navigate('/'))
+      .then(() => {
+        //dispatch(fetchArticleById(article.slug))
+        //Написать редюсер очистки при удалении статьи из article
+        dispatch(getArticles(1))
+        navigate('/')
+      })
       .catch((error) => {
         console.error('Failed to delete the article:', error)
       })

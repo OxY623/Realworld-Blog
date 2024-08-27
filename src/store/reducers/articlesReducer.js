@@ -24,12 +24,6 @@ const initialState = {
 const articlesReducer = (state = initialState, action) => {
   switch (action.type) {
     // Для одного артикула
-    // case FETCH_ARTICLE_REQUEST:
-    //   return { ...state, loading: true }
-    // case FETCH_ARTICLE_SUCCESS:
-    //   return { ...state, article: action.payload, loading: false }
-    // case FETCH_ARTICLE_FAILURE:
-    //   return { ...state, error: action.payload, loading: false }
     case FETCH_ARTICLE_REQUEST:
       return { ...state, loading: true, error: null }
 
