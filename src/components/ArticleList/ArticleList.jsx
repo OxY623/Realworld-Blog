@@ -19,6 +19,7 @@ const ArticleList = () => {
   const error = useSelector((state) => state.articles.error)
   const page = useSelector((state) => state.articles.page)
   const totalArticles = useSelector((state) => state.articles.totalArticles)
+  const style = { color: 'rgba(0, 0, 0, 0.75)' }
 
   const dispatch = useDispatch()
 
@@ -57,11 +58,10 @@ const ArticleList = () => {
               className={styles.link}
               to={`/articles/${article.slug}`}
             >
-              <ArticleCard article={article} />
+              <ArticleCard article={article} style={style} />
             </Link>
           ))
         )}
-        {/* Пагинация */}
       </div>
       <div className={styles.articlesPaginater}>
         <Pagination

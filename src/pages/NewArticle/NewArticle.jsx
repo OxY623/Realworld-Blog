@@ -1,24 +1,31 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { createArticle } from '../../store/actions/articlesActions'
+import { createArticle, getArticles } from '../../store/actions/articlesActions'
 import FormHeader from '../../components/FormHeader'
 import Header from '../../components/Header'
-import Button from '../../components/FormButton'
+import ArticleForm from '../../components/ArticleForm/ArticleForm' // Импортируем ArticleForm
 
 import styles from './NewArticle.module.scss'
 
 const NewArticle = () => {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [body, setBody] = useState('')
   const [error, setError] = useState('')
+  const [flag, setFlag] = useState(false)
+
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+  const articleSlug = useSelector((state) => state.articles.article?.slug)
+
+  useEffect(() => {
+    if (flag && articleSlug) {
+      navigate(`/articles/${articleSlug}`)
+    }
+  }, [articleSlug, navigate, flag])
+
+  const handleSubmit = async (data) => {
+    const { title, description, body, tagList } = data
 
     if (!title || !description || !body) {
       setError('All fields are required')
@@ -26,8 +33,9 @@ const NewArticle = () => {
     }
 
     try {
-      dispatch(createArticle({ title, description, body }))
-      navigate('/')
+      dispatch(createArticle({ title, description, body, tagList }))
+      dispatch(getArticles(1))
+      setFlag(true)
     } catch (err) {
       setError('Failed to create article')
     }
@@ -39,35 +47,9 @@ const NewArticle = () => {
       <div className={styles.container}>
         <div>
           <div className={styles.formHeader}>
-            <FormHeader title="Create New Article" styles={styles} />
+            <FormHeader title="Create New Article" />
           </div>
-          {error && <p className={styles.errorMessage}>{error}</p>}
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <input
-              type="text"
-              placeholder="Title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className={styles.input}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Short Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={styles.input}
-              required
-            />
-            <textarea
-              placeholder="Text"
-              value={body}
-              onChange={(e) => setBody(e.target.value)}
-              className={styles.textarea}
-              required
-            />
-            <Button type="submit">Send</Button>
-          </form>
+          <ArticleForm onSubmit={handleSubmit} error={error} />
         </div>
       </div>
     </>

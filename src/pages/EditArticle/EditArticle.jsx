@@ -1,24 +1,27 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { editArticle } from '../../store/actions/articlesActions'
+import { editArticle, getArticles } from '../../store/actions/articlesActions'
+import FormHeader from '../../components/FormHeader'
+import Header from '../../components/Header'
+import ArticleForm from '../../components/ArticleForm'
+
+import styles from './EditArticle.module.scss'
 
 const EditArticle = () => {
   const { slug } = useParams()
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
   const article = useSelector((state) =>
-    state.article.articles.find((a) => a.slug === slug),
+    state.articles.articles.find((a) => a.slug === slug),
   )
 
-  const [title, setTitle] = useState(article?.title || '')
-  const [description, setDescription] = useState(article?.description || '')
-  const [body, setBody] = useState(article?.body || '')
   const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
+  const handleSubmit = async (data) => {
+    const { title, description, body, tagList } = data
 
     if (!title || !description || !body) {
       setError('All fields are required')
@@ -26,41 +29,41 @@ const EditArticle = () => {
     }
 
     try {
-      dispatch(editArticle(slug, { title, description, body }))
+      await dispatch(editArticle(slug, { title, description, body, tagList }))
+      await dispatch(getArticles(1))
       navigate(`/articles/${slug}`)
     } catch (err) {
       setError('Failed to update article')
     }
   }
 
+  useEffect(() => {
+    if (article) {
+      // Set initial values when article is loaded
+    }
+  }, [article])
+
   return (
-    <div>
-      <h1>Edit Article</h1>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Short Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-        <textarea
-          placeholder="Text"
-          value={body}
-          onChange={(e) => setBody(e.target.value)}
-          required
-        />
-        <button type="submit">Update Article</button>
-      </form>
-    </div>
+    <>
+      <Header />
+      <div className={styles.container}>
+        <div>
+          <div className={styles.formHeader}>
+            <FormHeader title="Edit Article" styles={styles} />
+          </div>
+          {article && (
+            <ArticleForm
+              initialTitle={article.title}
+              initialDescription={article.description}
+              initialBody={article.body}
+              initialTags={article.tagList || []}
+              onSubmit={handleSubmit}
+              error={error}
+            />
+          )}
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -1,39 +1,95 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { deleteArticle } from '../../store/actions/articlesActions' // Импортируем стили
+import { deleteArticle } from '../../store/actions/articlesActions'
 
 import styles from './ActionButtons.module.scss'
+import warning from './Frame 19.svg'
 
-const ActionButtons = ({ onEdit, onDelete }) => {
+const ActionButtons = () => {
   const dispatch = useDispatch()
-  const author = useSelector((state) => state.articles.article.author.username)
-  const isAuth = useSelector((state) => state.auth.isAuthenticated)
-  console.log(isAuth)
-  const user = useSelector((state) => state.auth.user?.username)
-  const isAuthor = user === author && isAuth // Проверяем авторизован ли пользователь и является ли он автором статьи
-  const article = useSelector((state) => state.articles.article)
-
   const navigate = useNavigate()
 
-  const handleDelete = () => {
-    dispatch(deleteArticle(article.slug)) // Удаляем статью с сервера
-  }
+  const author = useSelector((state) => state.articles.article.author.username)
+  const isAuth = useSelector((state) => state.auth.isAuthenticated)
+  const user = useSelector((state) => state.auth.user?.username)
+  const isAuthor = user === author && isAuth
+  const article = useSelector((state) => state.articles.article)
 
-  const handleEdit = () => {
-    navigate('/articles/:slug/edit')
-  }
+  const [showValidationPopup, setShowValidationPopup] = useState(false)
+  const popupRef = useRef(null) // Create a ref for the popup
 
-  if (!isAuthor) return <></>
+  const handleDelete = useCallback(() => {
+    setShowValidationPopup(true)
+  }, [])
+
+  const handleEdit = useCallback(() => {
+    navigate(`/articles/${article.slug}/edit`)
+  }, [navigate, article.slug])
+
+  const confirmDelete = useCallback(() => {
+    dispatch(deleteArticle(article.slug))
+      .then(() => navigate('/'))
+      .catch((error) => {
+        console.error('Failed to delete the article:', error)
+      })
+  }, [dispatch, navigate, article.slug])
+
+  const cancelDelete = useCallback(() => {
+    setShowValidationPopup(false)
+  }, [])
+
+  // Handle clicks outside the popup
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        setShowValidationPopup(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  if (!isAuthor) return null
+
   return (
     <div className={styles.actionButtons}>
-      <button className={styles.button} onClick={handleEdit}>
-        Edit
-      </button>
-      <button className={styles.button} onClick={handleDelete}>
+      <button
+        className={styles.button}
+        onClick={handleDelete}
+        aria-label="Delete article"
+      >
         Delete
       </button>
+      <button
+        className={styles.button}
+        onClick={handleEdit}
+        aria-label="Edit article"
+      >
+        Edit
+      </button>
+
+      {showValidationPopup && (
+        <div className={styles.validationPopup} ref={popupRef}>
+          <div className={styles.wrapperPopup}>
+            <img className={styles.logo} alt="Warning icon" src={warning} />
+            <p>Are you sure you want to delete this article?</p>
+          </div>
+
+          <div className={styles.popupButtons}>
+            <button onClick={cancelDelete} className={styles.cancelButton}>
+              No
+            </button>
+            <button onClick={confirmDelete} className={styles.confirmButton}>
+              Yes
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

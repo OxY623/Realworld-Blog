@@ -19,6 +19,7 @@ const ArticleCard = (props) => {
     author = { username: 'Anonymous', image: defaultUserLogo },
     favoritesCount = 0,
   } = article
+  const { style } = props
 
   const dateUpdated = new Date(updatedAt)
   const formattedDate = format(dateUpdated, 'MMMM d, yyyy')
@@ -53,7 +54,9 @@ const ArticleCard = (props) => {
         </div>
 
         <div className={styles.articleTags}>{tagListElements}</div>
-        <p className={styles.articleDescription}>{description}</p>
+        <p className={styles.articleDescription} style={style}>
+          {description}
+        </p>
       </div>
       <div className={styles.articleMeta}>
         <div className={styles.wrapperMeta}>

@@ -32,7 +32,7 @@ export const fetchCreateArticle = async (articleData) => {
   try {
     return await axios.post(
       `${API_URL}/articles`,
-      { article: articleData }, // Данные статьи обернуты в объект с ключом "article"
+      { article: articleData },
       {
         headers: {
           Authorization: `Token ${token}`,

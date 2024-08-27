@@ -63,7 +63,10 @@ const articlesReducer = (state = initialState, action) => {
     case CREATE_ARTICLE:
       return {
         ...state,
-        articles: [...state.articles, action.payload],
+        article: action.payload,
+        loading: false,
+        error: null,
+        // articles: [...state.articles, action.payload],
       }
     case EDIT_ARTICLE:
       return {

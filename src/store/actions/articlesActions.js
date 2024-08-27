@@ -77,6 +77,7 @@ export const getArticles = (page) => {
 // Thunk для создания статьи
 export const createArticle = (data) => async (dispatch) => {
   try {
+    dispatch(fetchArticlesRequest())
     const response = await fetchCreateArticle(data)
 
     dispatch({

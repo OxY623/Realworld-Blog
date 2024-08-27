@@ -61,7 +61,10 @@ const Article = () => {
   return (
     <div className={styles.container}>
       <div className={styles.article}>
-        <ArticleCard article={article} style={{ boxShadow: 'none' }} />
+        <ArticleCard
+          article={article}
+          style={{ color: 'rgba(0, 0, 0, 0.5)' }}
+        />
         <ActionButtons />
         <h1 className={styles.title}>{article.title}</h1>
         <ReactMarkdown
