@@ -4,7 +4,7 @@ import LocalStorageAPI from './LocalStorageAPI'
 
 const API_URL = 'https://blog.kata.academy/api/'
 
-export const formatData = (data) => {
+export const formatData = (item = 'user', data) => {
   const filteredData = Object.entries(data).reduce((acc, [key, value]) => {
     if (
       value !== null &&
@@ -19,9 +19,44 @@ export const formatData = (data) => {
   }, {})
 
   return {
-    user: {
+    [item]: {
       ...filteredData,
     },
+  }
+}
+
+export const fetchFavoriteArticle = async (slug) => {
+  const token = LocalStorageAPI.load('token')
+  console.log(token)
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.post(
+      `${API_URL}/articles/${slug}/favorite`,
+      {},
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      },
+    )
+  } catch (error) {
+    throw error
+  }
+}
+
+export const fetchUnfavoritedArticle = async (slug) => {
+  const token = LocalStorageAPI.load('token')
+
+  // eslint-disable-next-line no-useless-catch
+  try {
+    return await axios.delete(`${API_URL}/articles/${slug}/favorite`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    })
+  } catch (error) {
+    throw error
   }
 }
 
@@ -36,7 +71,6 @@ export const fetchCreateArticle = async (articleData) => {
       {
         headers: {
           Authorization: `Token ${token}`,
-          'Content-Type': 'application/json',
         },
       },
     )
@@ -52,7 +86,7 @@ export const fetchUpdateArticle = async (slug, articleData) => {
   try {
     return await axios.put(
       `${API_URL}/articles/${slug}`,
-      { article: articleData }, // Данные статьи обернуты в объект с ключом "article"
+      { article: articleData },
       {
         headers: {
           Authorization: `Token ${token}`,
@@ -105,7 +139,7 @@ export const fetchArticle = async (slug) => {
   }
 }
 
-export const fetchSingUp = async (data) => {
+export const fetchSignUp = async (data) => {
   // eslint-disable-next-line no-useless-catch
   try {
     return await axios.post(`${API_URL}/users`, data, {
@@ -123,21 +157,6 @@ export const fetchSignIn = async (data) => {
   try {
     return await axios.post(`${API_URL}/users/login`, data, {
       headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-export const fetchUpdateProfile = (data) => {
-  const token = LocalStorageAPI.load('token')
-  // eslint-disable-next-line no-useless-catch
-  try {
-    return axios.put(`${API_URL}/user`, data, {
-      headers: {
-        Authorization: `Token ${token}`,
         'Content-Type': 'application/json',
       },
     })

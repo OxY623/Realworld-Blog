@@ -17,10 +17,6 @@ const initialState = {
 }
 
 const authReducer = (state = initialState, action) => {
-  // Логирование для отладки
-  //console.log('Action:', action)
-  //console.log('State before:', state)
-
   switch (action.type) {
     case AUTH_REQUEST:
       return {
@@ -30,30 +26,28 @@ const authReducer = (state = initialState, action) => {
       }
 
     case AUTH_SUCCESS:
-      // Логирование для отладки
-      //console.log('SIGNUP/SIGNIN SUCCESS Payload:', action.payload)
-
       return {
         ...state,
         loading: false,
         user: action.payload?.user,
-        updateUser: true,
-        isAuthenticated: !!action.payload?.user, // Если пользователь есть, то isAuthenticated = true
+        updateUserSuccess: false,
+        isAuthenticated: !!action.payload?.user,
       }
 
     case AUTH_FAILURE:
       return {
         ...state,
         loading: false,
-        error: action.payload || state.error,
-        isAuthenticated: false, // В случае ошибки сбрасываем аутентификацию
+        error: action.payload || 'Произошла ошибка аутентификации',
+        isAuthenticated: false,
       }
 
     case LOGOUT:
       return {
         ...state,
         user: null,
-        isAuthenticated: false, // Пользователь выходит, сбрасываем аутентификацию
+        isAuthenticated: false,
+        updateUserSuccess: false,
       }
 
     case FETCH_USER_SUCCESS:
@@ -61,7 +55,7 @@ const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         user: action.payload?.user || state.user,
-        isAuthenticated: !!(action.payload?.user || state.user), // Проверка существования пользователя
+        isAuthenticated: !!(action.payload?.user || state.user),
       }
 
     case UPDATE_USER_SUCCESS:
@@ -69,13 +63,12 @@ const authReducer = (state = initialState, action) => {
         ...state,
         loading: false,
         updateUserSuccess: true,
-        user: action.payload?.user || state.user, // Обновляем данные пользователя после изменения
+        user: action.payload?.user || state.user,
       }
 
     case CLEAR_UPDATE_USER_SUCCESS:
       return {
         ...state,
-        loading: false,
         updateUserSuccess: false,
       }
 

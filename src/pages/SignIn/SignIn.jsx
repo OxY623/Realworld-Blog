@@ -8,6 +8,7 @@ import Header from '../../components/Header'
 import FormHeader from '../../components/FormHeader'
 import Button from '../../components/FormButton/FormButton'
 import { formatData } from '../../api'
+import FormGroup from '../../components/FormGroup/FormGroup' // Импортируем компонент FormGroup
 
 import styles from './SignIn.module.scss'
 
@@ -28,7 +29,7 @@ const SignIn = () => {
 
   const onSubmit = async (data) => {
     try {
-      data = formatData(data)
+      data = formatData('user', data)
       await dispatch(signInUser(data))
       setRedirect(true)
     } catch (err) {
@@ -53,37 +54,34 @@ const SignIn = () => {
       <div className={styles.signInForm}>
         <FormHeader title={title} styles={styles} />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className={styles.formGroup}>
-            <label>Email address:</label>
-            <input
-              type="email"
-              className={errors.email ? styles.errorBorder : ''}
-              placeholder="Email address"
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: 'Invalid email',
-                },
-              })}
-              disabled={loading}
-            />
-            {errors.email && (
-              <p className={styles.error}>{errors.email.message}</p>
-            )}
-          </div>
-          <div className={styles.formGroup}>
-            <label>Password:</label>
-            <input
-              type="password"
-              className={errors.password ? styles.errorBorder : ''}
-              {...register('password', { required: 'Password is required' })}
-              disabled={loading}
-            />
-            {errors.password && (
-              <p className={styles.error}>{errors.password.message}</p>
-            )}
-          </div>
+          <FormGroup
+            label="Email address"
+            name="email"
+            type="email"
+            placeholder="Email address"
+            register={register}
+            errors={errors}
+            validation={{
+              required: 'Email is required',
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: 'Invalid email',
+              },
+            }}
+            disabled={loading}
+            styles={styles}
+          />
+          <FormGroup
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            register={register}
+            errors={errors}
+            validation={{ required: 'Password is required' }}
+            disabled={loading}
+            styles={styles}
+          />
           {error && <p className={styles.error}>{error.message}</p>}
           <Button style={style} type="submit" loading={loading}>
             Login

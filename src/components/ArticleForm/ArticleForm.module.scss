@@ -4,68 +4,118 @@
   width: 100%;
 }
 
-.input {
-  margin-bottom: 15px;
+.input,
+.textarea {
+  width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
+  margin-bottom: 15px;
 }
 
 .textarea {
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  height: 100px;
+  height: 168px;
+  resize: vertical;
+}
+
+.errorBorder {
+  border-color: red !important; /* Ensure it overrides other styles */
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.errorMessage {
+  color: red;
+  margin-bottom: 1rem;
   font-size: 14px;
-  resize: vertical; /* Позволяет изменять высоту текстовой области */
+}
+
+.formGroup {
+  margin-bottom: 1rem;
 }
 
 .tagsContainer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 20px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 18px;
+  width: 50%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 18px;
 }
 
 .tag {
+  background-color: white;
+  border-radius: 4px;
+  //padding: 0.5rem;
+  //margin: 0.25rem;
   display: flex;
   align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 5px;
-  background-color: #f7f7f7;
+  width: 300px;
+  height: 40px;
+  margin-bottom: 0;
 }
 
 .deleteTagButton {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 5px;
-  margin-left: 10px;
+  background: none;
+  color: rgb(245, 34, 45);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: center;
   cursor: pointer;
+  margin-left: 0.5rem;
+  box-sizing: border-box;
+  border: 1px solid rgb(245, 34, 45);
+  border-radius: 4px;
+  padding: 8px 16px;
+  width: 118px;
+  height: 40px;
+}
+
+.deleteTagButton:hover {
+  background-color: rgb(245, 34, 45);
+  color: white;
 }
 
 .addTagContainer {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 18px;
 }
 
 .addTagButton {
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 10px;
+  background-color: #f9f9fa;
+  padding: 8px 16px;
   cursor: pointer;
+  box-sizing: border-box;
+  border: 1px solid rgb(24, 144, 255);
+  border-radius: 4px;
+  width: 136px;
+  height: 40px;
+  color: rgb(24, 144, 255);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: center;
+  align-self: flex-end;
 }
 
-.errorMessage {
-  color: red;
-  margin-bottom: 20px;
-  font-size: 14px;
+.addTagButton:hover {
+  background-color: #0056b3;
+  color: white;
 }
 
+.button_send{
+  width: 45%;
+  height: 40px;
+}

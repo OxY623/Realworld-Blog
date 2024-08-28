@@ -1,51 +1,55 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { createArticle, getArticles } from '../../store/actions/articlesActions'
+import { createArticle } from '../../store/actions/articlesActions'
 import FormHeader from '../../components/FormHeader'
 import Header from '../../components/Header'
-import ArticleForm from '../../components/ArticleForm/ArticleForm' // Импортируем ArticleForm
+import ArticleForm from '../../components/ArticleForm/ArticleForm'
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage'
 
 import styles from './NewArticle.module.scss'
 
 const NewArticle = () => {
-  const [error, setError] = useState('')
-  const [flag, setFlag] = useState(false)
-
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [createdArticleSlug, setCreatedArticleSlug] = useState(null)
 
-  const articleSlug = useSelector((state) => state.articles.article?.slug)
+  const article = useSelector((state) => state.articles.article)
+  const error = useSelector((state) => state.articles.error)
 
   useEffect(() => {
-    if (flag && articleSlug) {
-      navigate(`/articles/${articleSlug}`)
+    if (article?.slug && isSubmitting) {
+      setCreatedArticleSlug(article.slug)
+      setIsSubmitting(false)
     }
-  }, [articleSlug, navigate, flag])
+  }, [article, isSubmitting])
 
-  const handleSubmit = async (data) => {
+  useEffect(() => {
+    if (createdArticleSlug) {
+      console.log(createdArticleSlug)
+      navigate(`/articles/${createdArticleSlug}`)
+    }
+  }, [createdArticleSlug, navigate])
+
+  const handleSubmit = (data) => {
     const { title, description, body, tagList } = data
 
     if (!title || !description || !body) {
-      setError('All fields are required')
-      return
+      return <ErrorMessage />
     }
 
-    try {
-      dispatch(createArticle({ title, description, body, tagList }))
-      dispatch(getArticles(1))
-      setFlag(true)
-    } catch (err) {
-      setError('Failed to create article')
-    }
+    dispatch(createArticle({ title, description, body, tagList })).then(() =>
+      setIsSubmitting(true),
+    )
   }
 
   return (
     <>
       <Header />
       <div className={styles.container}>
-        <div>
+        <div className={styles.container_form}>
           <div className={styles.formHeader}>
             <FormHeader title="Create New Article" />
           </div>

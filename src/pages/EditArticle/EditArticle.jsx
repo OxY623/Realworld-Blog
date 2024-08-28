@@ -50,25 +50,27 @@ const EditArticle = () => {
   return (
     <>
       <Header />
-      <div className={styles.container}>
-        <div>
-          <div className={styles.formHeader}>
-            <FormHeader title="Edit Article" styles={styles} />
-          </div>
-          {article ? (
-            <ArticleForm
-              initialTitle={article.title}
-              initialDescription={article.description}
-              initialBody={article.body}
-              initialTags={article.tagList || []}
-              onSubmit={handleSubmit}
-              error={error}
-            />
-          ) : (
-            <div>
-              <Spinner />
+      <div className={styles.container_wrapper}>
+        <div className={styles.container_form}>
+          <div>
+            <div className={styles.formHeader}>
+              <FormHeader title="Edit Article" styles={styles} />
             </div>
-          )}
+            {article ? (
+              <ArticleForm
+                initialTitle={article.title}
+                initialDescription={article.description}
+                initialBody={article.body}
+                initialTags={article.tagList || []}
+                onSubmit={handleSubmit}
+                error={error}
+              />
+            ) : (
+              <div>
+                <Spinner />
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

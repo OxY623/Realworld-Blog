@@ -4,6 +4,8 @@ import {
   fetchDeleteArticle,
   fetchUpdateArticle,
   fetchArticle,
+  fetchFavoriteArticle,
+  fetchUnfavoritedArticle,
 } from '../../api'
 
 import {
@@ -76,8 +78,8 @@ export const getArticles = (page) => {
 
 // Thunk для создания статьи
 export const createArticle = (data) => async (dispatch) => {
+  dispatch(fetchArticlesRequest())
   try {
-    dispatch(fetchArticlesRequest())
     const response = await fetchCreateArticle(data)
 
     dispatch({
@@ -91,6 +93,7 @@ export const createArticle = (data) => async (dispatch) => {
 
 // Thunk для редактирования статьи
 export const editArticle = (slug, data) => async (dispatch) => {
+  dispatch(fetchArticlesRequest())
   try {
     const response = await fetchUpdateArticle(slug, data)
 
@@ -105,33 +108,48 @@ export const editArticle = (slug, data) => async (dispatch) => {
 
 // Thunk для удаления статьи
 export const deleteArticle = (slug) => async (dispatch) => {
+  dispatch(fetchArticlesRequest())
   try {
     await fetchDeleteArticle(slug)
 
     dispatch({
       type: DELETE_ARTICLE,
-      payload: slug, // передаем только slug, так как это все, что нужно для удаления статьи
+      payload: slug,
     })
   } catch (error) {
     dispatch(fetchArticleFailure(error.message))
   }
 }
 
-// Thunk для получения одной статьи по ID
-// export const fetchArticleById = (id) => async (dispatch) => {
-//   dispatch(fetchArticleRequest())
-//   try {
-//     const article = await fetchArticle(id)
-//     dispatch(fetchArticleSuccess(article))
-//   } catch (error) {
-//     dispatch(fetchArticleFailure(error.message))
-//   }
-// }
 export const fetchArticleById = (slug) => async (dispatch) => {
+  dispatch(fetchArticlesRequest())
   try {
     const response = await fetchArticle(slug)
-    //console.log(response)
+
     dispatch(fetchArticleSuccess(response))
+  } catch (error) {
+    dispatch(fetchArticleFailure(error.message))
+  }
+}
+
+export const favoriteArticle = (slug) => async (dispatch) => {
+  dispatch(fetchArticlesRequest())
+  try {
+    const response = await fetchFavoriteArticle(slug)
+    dispatch({ type: EDIT_ARTICLE, payload: response.data.article })
+  } catch (error) {
+    dispatch(fetchArticleFailure(error.message))
+  }
+}
+
+export const unfavoritedArticle = (slug) => async (dispatch) => {
+  dispatch(fetchArticlesRequest())
+  try {
+    const response = await fetchUnfavoritedArticle(slug)
+    dispatch({
+      type: EDIT_ARTICLE,
+      payload: response.data.article,
+    })
   } catch (error) {
     dispatch(fetchArticleFailure(error.message))
   }

@@ -1,0 +1,100 @@
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 5px;
+  color: rgb(38, 38, 38);
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
+  text-align: left;
+}
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  color: rgb(191, 191, 191);
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  text-align: left;
+}
+
+.input:disabled {
+  background-color: #e0e0e0;
+}
+
+.errorBorder {
+  border: 1px solid rgb(245, 34, 45);
+  background-color: rgb(255, 255, 255);
+}
+
+.error {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 5px;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.input, .textarea {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.textarea {
+  height: 100px;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #f1f1f1;
+  padding: 0.5rem;
+  margin: 0.25rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.deleteTagButton {
+  background: none;
+  border: none;
+  color: red;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.addTagContainer {
+  display: flex;
+  align-items: center;
+}
+
+.addTagButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+

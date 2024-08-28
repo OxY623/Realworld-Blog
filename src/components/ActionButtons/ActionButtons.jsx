@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { deleteArticle, getArticles } from '../../store/actions/articlesActions'
 
 import styles from './ActionButtons.module.scss'
-import warning from './Frame 19.svg'
+//import warning from './Frame 19.svg'
+import warningIcon from './Frame 19.svg'
 
 const ActionButtons = () => {
   const dispatch = useDispatch()
@@ -78,10 +79,26 @@ const ActionButtons = () => {
         Edit
       </button>
 
+      {/*{showValidationPopup && (*/}
+      {/*  <div className={styles.validationPopup} ref={popupRef}>*/}
+      {/*    <div className={styles.wrapperPopup}>*/}
+      {/*      <img className={styles.logo} alt="Warning icon" src={warning} />*/}
+      {/*      <p>Are you sure you want to delete this article?</p>*/}
+      {/*    </div>*/}
+      {/*    <div className={styles.popupButtons}>*/}
+      {/*      <button onClick={cancelDelete} className={styles.cancelButton}>*/}
+      {/*        No*/}
+      {/*      </button>*/}
+      {/*      <button onClick={confirmDelete} className={styles.confirmButton}>*/}
+      {/*        Yes*/}
+      {/*      </button>*/}
+      {/*    </div>*/}
+      {/*  </div>*/}
+      {/*)}*/}
       {showValidationPopup && (
         <div className={styles.validationPopup} ref={popupRef}>
           <div className={styles.wrapperPopup}>
-            <img className={styles.logo} alt="Warning icon" src={warning} />
+            <img className={styles.logo} alt="Warning icon" src={warningIcon} />
             <p>Are you sure you want to delete this article?</p>
           </div>
 

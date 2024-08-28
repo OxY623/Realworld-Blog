@@ -17,6 +17,7 @@ import { logout, getUser } from '../../store/actions/authActions'
 // import Spinner from '../Spinner'
 import NewArticle from '../../pages/NewArticle'
 import EditArticle from '../../pages/EditArticle'
+import PrivateRoute from '../PrivateRoute/PrivateRoute'
 
 import styles from './App.module.scss'
 
@@ -52,7 +53,10 @@ function App() {
 
         <Routes>
           <Route path="/" element={<ArticlesPage />} />
-          <Route path="/new-article" element={<NewArticle />} />
+          {/*<Route path="/new-article" element={<NewArticle />} />*/}
+          <Route element={<PrivateRoute />}>
+            <Route path="/new-article" element={<NewArticle />} />
+          </Route>
           <Route path="/articles" element={<ArticlesPage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route path="/articles/:slug/edit" element={<EditArticle />} />

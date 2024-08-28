@@ -8,6 +8,7 @@ import { formatData } from '../../api'
 import Header from '../../components/Header'
 import FormHeader from '../../components/FormHeader'
 import Button from '../../components/FormButton/FormButton'
+import FormGroup from '../../components/FormGroup/FormGroup' // Импортируем компонент FormGroup
 
 import styles from './Profile.module.scss'
 
@@ -30,13 +31,12 @@ const Profile = () => {
   } = useForm()
 
   const onSubmit = (data) => {
-    data = formatData(data)
+    data = formatData('user', data)
     dispatch(updateUser(data))
   }
 
   useEffect(() => {
     if (updateUserSuccess) {
-      //console.log(updateUserSuccess)
       const timer = setTimeout(() => {
         dispatch({ type: 'CLEAR_UPDATE_USER_SUCCESS' })
         setRedirect(true)
@@ -73,82 +73,70 @@ const Profile = () => {
         <div className={styles.profileForm}>
           <FormHeader title="Edit Profile" styles={styles} />
           <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={styles.formGroup}>
-              <label htmlFor="username">Username:</label>
-              <input
-                placeholder="Username"
-                className={formErrors.username ? styles.errorBorder : ''}
-                id="username"
-                type="text"
-                {...register('username', { required: 'Username is required' })}
-                disabled={loading}
-              />
-              {formErrors.username && (
-                <p className={styles.error}>{formErrors.username.message}</p>
-              )}
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="email">Email address:</label>
-              <input
-                placeholder="Email address"
-                id="email"
-                type="email"
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: 'Invalid email',
-                  },
-                })}
-                disabled={loading}
-                className={formErrors.email ? styles.errorBorder : ''}
-              />
-              {formErrors.email && (
-                <p className={styles.error}>{formErrors.email.message}</p>
-              )}
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="password">New Password:</label>
-              <input
-                placeholder="New Password"
-                id="password"
-                type="password"
-                {...register('password', {
-                  minLength: {
-                    value: 6,
-                    message: 'Password must be at least 6 characters',
-                  },
-                  maxLength: {
-                    value: 40,
-                    message: 'Password cannot exceed 40 characters',
-                  },
-                })}
-                disabled={loading}
-                className={formErrors.password ? styles.errorBorder : ''}
-              />
-              {formErrors.password && (
-                <p className={styles.error}>{formErrors.password.message}</p>
-              )}
-            </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="image">Avatar image (url):</label>
-              <input
-                placeholder={randomStringPlaceholder}
-                id="image"
-                type="text"
-                {...register('image', {
-                  pattern: {
-                    value: /^https?:\/\/[^\s]+$/,
-                    message: 'Invalid URL',
-                  },
-                })}
-                disabled={loading}
-                className={formErrors.image ? styles.errorBorder : ''}
-              />
-              {formErrors.image && (
-                <p className={styles.error}>{formErrors.image.message}</p>
-              )}
-            </div>
+            <FormGroup
+              label="Username"
+              name="username"
+              type="text"
+              placeholder="Username"
+              register={register}
+              errors={formErrors}
+              validation={{ required: 'Username is required' }}
+              disabled={loading}
+              styles={styles}
+            />
+            <FormGroup
+              label="Email address"
+              name="email"
+              type="email"
+              placeholder="Email address"
+              register={register}
+              errors={formErrors}
+              validation={{
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Invalid email',
+                },
+              }}
+              disabled={loading}
+              styles={styles}
+            />
+            <FormGroup
+              label="New Password"
+              name="password"
+              type="password"
+              placeholder="New Password"
+              register={register}
+              errors={formErrors}
+              validation={{
+                minLength: {
+                  value: 6,
+                  message: 'Password must be at least 6 characters',
+                },
+                maxLength: {
+                  value: 40,
+                  message: 'Password cannot exceed 40 characters',
+                },
+              }}
+              disabled={loading}
+              styles={styles}
+            />
+            <FormGroup
+              label="Avatar image (url)"
+              name="image"
+              type="text"
+              placeholder={randomStringPlaceholder}
+              register={register}
+              errors={formErrors}
+              validation={{
+                pattern: {
+                  value: /^https?:\/\/[^\s]+$/,
+                  message: 'Invalid URL',
+                },
+              }}
+              disabled={loading}
+              styles={styles}
+            />
             {updateUserSuccess && (
               <p className={styles.success}>
                 Данные были успешно обновлены. Подождите...

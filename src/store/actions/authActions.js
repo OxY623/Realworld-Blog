@@ -1,5 +1,5 @@
 import {
-  fetchSingUp,
+  fetchSignUp,
   fetchSignIn,
   getCurrentUser,
   updateCurrentUser,
@@ -19,14 +19,11 @@ export const signUpUser = (userData) => {
   return async (dispatch) => {
     dispatch({ type: AUTH_REQUEST })
     try {
-      const response = await fetchSingUp(userData)
+      const response = await fetchSignUp(userData)
       const token = response.data.user.token
-      dispatch({ type: SET_TOKEN, payload: { token } })
 
-      dispatch({
-        type: AUTH_SUCCESS,
-        payload: response.data,
-      })
+      dispatch({ type: SET_TOKEN, payload: { token } })
+      dispatch({ type: AUTH_SUCCESS, payload: response.data })
     } catch (error) {
       dispatch({
         type: AUTH_FAILURE,
@@ -43,12 +40,9 @@ export const signInUser = (userData) => {
     try {
       const response = await fetchSignIn(userData)
       const token = response.data.user.token
-      dispatch({ type: SET_TOKEN, payload: { token } })
 
-      dispatch({
-        type: AUTH_SUCCESS,
-        payload: response.data,
-      })
+      dispatch({ type: SET_TOKEN, payload: { token } })
+      dispatch({ type: AUTH_SUCCESS, payload: response.data })
     } catch (error) {
       dispatch({
         type: AUTH_FAILURE,
@@ -67,14 +61,15 @@ export const getUser = () => async (dispatch) => {
   try {
     const response = await getCurrentUser()
     const token = response.data.user.token
+
     dispatch({ type: SET_TOKEN, payload: { token } })
     dispatch({ type: FETCH_USER_SUCCESS, payload: response.data })
   } catch (error) {
     dispatch({
       type: AUTH_FAILURE,
-      error:
+      payload:
         error.message ||
-        'Произошла непредвиденная ошибка, из-за которой не удалось получить пользователя',
+        'Произошла непредвиденная ошибка при получении пользователя',
     })
   }
 }
@@ -87,9 +82,9 @@ export const updateUser = (userData) => {
     } catch (error) {
       dispatch({
         type: AUTH_FAILURE,
-        error:
+        payload:
           error.message ||
-          'Произошла непредвиденная ошибка, из-за которой не удалось получить пользователя',
+          'Произошла непредвиденная ошибка при обновлении пользователя',
       })
     }
   }

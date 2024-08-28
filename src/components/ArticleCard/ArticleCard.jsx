@@ -1,15 +1,21 @@
-import React from 'react'
-// import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
+
+import {
+  favoriteArticle,
+  unfavoritedArticle,
+} from '../../store/actions/articlesActions'
 
 import styles from './ArticleCard.module.scss'
 import TransparentHeart from './TransparentHeart'
 import defaultUserLogo from './user_logo.svg'
 
-const liked = false // Пока без регистрации
-
 const ArticleCard = (props) => {
+  const dispatch = useDispatch()
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
   const article = props.article || {}
+  const [liked, setLiked] = useState(article.favorited || false)
 
   const {
     title = 'Untitled',
@@ -19,7 +25,23 @@ const ArticleCard = (props) => {
     author = { username: 'Anonymous', image: defaultUserLogo },
     favoritesCount = 0,
   } = article
+
   const { style } = props
+
+  useEffect(() => {
+    setLiked(article.favorited)
+  }, [article.favorited])
+
+  const handleLikeClick = (event) => {
+    event.stopPropagation() // Останавливаем всплытие события
+
+    if (liked) {
+      dispatch(unfavoritedArticle(article.slug))
+    } else {
+      dispatch(favoriteArticle(article.slug))
+    }
+    setLiked(!liked)
+  }
 
   const dateUpdated = new Date(updatedAt)
   const formattedDate = format(dateUpdated, 'MMMM d, yyyy')
@@ -30,29 +52,28 @@ const ArticleCard = (props) => {
   ))
 
   const authorName = author.username
-  const urlUser = author.image
+  const urlUser = author.image || defaultUserLogo
 
   return (
-    // eslint-disable-next-line no-undef
     <div className={styles.articleCard}>
       <div className={styles.articleContent}>
         <div className={styles.wrapper}>
-          {/* Используем Link для навигации */}
-          {/*<Link*/}
-          {/*  to={`/articles/${article.slug}`}*/}
-          {/*  className={styles.articleTitle}*/}
-          {/*>*/}
           <h3>{title}</h3>
-          {/*</Link>*/}
           <div className={styles.articleLikes} aria-label="likes">
             <TransparentHeart
               filled={liked}
-              onClick={() => window.alert('Liked')}
+              onClick={(event) => {
+                if (isAuthenticated) {
+                  handleLikeClick(event)
+                } else {
+                  event.stopPropagation() // Останавливаем всплытие события
+                  window.alert('Please login to like this article')
+                }
+              }}
             />
             <span>{favoritesCount}</span>
           </div>
         </div>
-
         <div className={styles.articleTags}>{tagListElements}</div>
         <p className={styles.articleDescription} style={style}>
           {description}
