@@ -28,7 +28,7 @@ const NewArticle = () => {
 
   useEffect(() => {
     if (createdArticleSlug) {
-      console.log(createdArticleSlug)
+      //console.log(createdArticleSlug)
       navigate(`/articles/${createdArticleSlug}`)
     }
   }, [createdArticleSlug, navigate])

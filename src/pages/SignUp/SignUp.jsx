@@ -29,7 +29,6 @@ const SignUp = () => {
   const onSubmit = (formData) => {
     const { agreement, repeatPassword, ...filteredData } = formData
     const data = formatData('user', filteredData)
-    console.log(data)
     dispatch(signUpUser(data))
   }
 

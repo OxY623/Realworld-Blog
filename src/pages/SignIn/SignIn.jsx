@@ -39,7 +39,7 @@ const SignIn = () => {
           setError(field, { type: 'manual', message })
         }
       } else {
-        console.error('Unexpected error:', err)
+        throw err
       }
     }
   }

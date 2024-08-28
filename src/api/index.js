@@ -27,7 +27,6 @@ export const formatData = (item = 'user', data) => {
 
 export const fetchFavoriteArticle = async (slug) => {
   const token = LocalStorageAPI.load('token')
-  console.log(token)
 
   // eslint-disable-next-line no-useless-catch
   try {
