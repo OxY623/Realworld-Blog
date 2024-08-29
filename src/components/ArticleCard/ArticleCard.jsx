@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
 
@@ -15,7 +15,6 @@ const ArticleCard = (props) => {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
   const article = props.article || {}
-  const [liked, setLiked] = useState(article.favorited || false)
 
   const {
     title = 'Untitled',
@@ -24,23 +23,32 @@ const ArticleCard = (props) => {
     tagList = [],
     author = { username: 'Anonymous', image: defaultUserLogo },
     favoritesCount = 0,
+    favorited = false,
   } = article
+
+  const [liked, setLiked] = useState(favorited)
+  const [likeCount, setLikeCount] = useState(favoritesCount)
+
+  useEffect(() => {
+    setLiked(favorited)
+    setLikeCount(favoritesCount)
+  }, [favorited, favoritesCount])
 
   const { style } = props
 
-  useEffect(() => {
-    setLiked(article.favorited)
-  }, [article.favorited])
-
   const handleLikeClick = (event) => {
-    event.stopPropagation() // Останавливаем всплытие события
+    event.preventDefault()
+    event.stopPropagation()
 
     if (liked) {
       dispatch(unfavoritedArticle(article.slug))
+      setLiked(false)
+      setLikeCount(likeCount - 1)
     } else {
       dispatch(favoriteArticle(article.slug))
+      setLiked(true)
+      setLikeCount(likeCount + 1)
     }
-    setLiked(!liked)
   }
 
   const dateUpdated = new Date(updatedAt)
@@ -55,38 +63,41 @@ const ArticleCard = (props) => {
   const urlUser = author.image || defaultUserLogo
 
   return (
-    <div className={styles.articleCard}>
-      <div className={styles.articleContent}>
-        <div className={styles.wrapper}>
-          <h3>{title}</h3>
-          <div className={styles.articleLikes} aria-label="likes">
-            <TransparentHeart
-              filled={liked}
-              onClick={(event) => {
-                if (isAuthenticated) {
-                  handleLikeClick(event)
-                } else {
-                  event.stopPropagation() // Останавливаем всплытие события
-                  window.alert('Please login to like this article')
-                }
-              }}
-            />
-            <span>{favoritesCount}</span>
+    <a href={`/article/${article.slug}`} className={styles.articleCardLink}>
+      <div className={styles.articleCard}>
+        <div className={styles.articleContent}>
+          <div className={styles.wrapper}>
+            <h3>{title}</h3>
+            <div className={styles.articleLikes} aria-label="likes">
+              <TransparentHeart
+                filled={liked}
+                onClick={(event) => {
+                  if (isAuthenticated) {
+                    handleLikeClick(event)
+                  } else {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    window.alert('Please login to like this article')
+                  }
+                }}
+              />
+              <span>{likeCount}</span>
+            </div>
           </div>
+          <div className={styles.articleTags}>{tagListElements}</div>
+          <p className={styles.articleDescription} style={style}>
+            {description}
+          </p>
         </div>
-        <div className={styles.articleTags}>{tagListElements}</div>
-        <p className={styles.articleDescription} style={style}>
-          {description}
-        </p>
-      </div>
-      <div className={styles.articleMeta}>
-        <div className={styles.wrapperMeta}>
-          <div className={styles.authorName}>{authorName}</div>
-          <div className={styles.publishDate}>{formattedDate}</div>
+        <div className={styles.articleMeta}>
+          <div className={styles.wrapperMeta}>
+            <div className={styles.authorName}>{authorName}</div>
+            <div className={styles.publishDate}>{formattedDate}</div>
+          </div>
+          <img src={urlUser} alt="Avatar" className={styles.avatar} />
         </div>
-        <img src={urlUser} alt="Avatar" className={styles.avatar} />
       </div>
-    </div>
+    </a>
   )
 }
 
