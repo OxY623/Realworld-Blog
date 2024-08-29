@@ -45,7 +45,7 @@ const Article = () => {
       <div className={styles.article}>
         <ArticleCard article={article} />
         <ActionButtons />
-        <h1 className={styles.title}>{article.title}</h1>
+        {/*<h1 className={styles.title}>{article.title}</h1>*/}
         <ReactMarkdown
           className={styles.body}
           remarkPlugins={[remarkGfm]}
