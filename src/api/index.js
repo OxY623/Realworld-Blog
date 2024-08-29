@@ -111,11 +111,16 @@ export const fetchDeleteArticle = async (slug) => {
 
 export const fetchArticles = async (page = 1) => {
   // eslint-disable-next-line no-useless-catch
+  const token = LocalStorageAPI.load('token')
   try {
     const response = await axios.get(`${API_URL}/articles`, {
       params: {
         limit: 5,
         offset: (page - 1) * 5,
+      },
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
       },
     })
     return response.data
