@@ -110,8 +110,8 @@ export const fetchDeleteArticle = async (slug) => {
 }
 
 export const fetchArticles = async (page = 1) => {
-  // eslint-disable-next-line no-useless-catch
   const token = LocalStorageAPI.load('token')
+  // eslint-disable-next-line no-useless-catch
   try {
     const response = await axios.get(`${API_URL}/articles`, {
       params: {
