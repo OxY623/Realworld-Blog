@@ -78,23 +78,6 @@ const ActionButtons = () => {
       >
         Edit
       </button>
-
-      {/*{showValidationPopup && (*/}
-      {/*  <div className={styles.validationPopup} ref={popupRef}>*/}
-      {/*    <div className={styles.wrapperPopup}>*/}
-      {/*      <img className={styles.logo} alt="Warning icon" src={warning} />*/}
-      {/*      <p>Are you sure you want to delete this article?</p>*/}
-      {/*    </div>*/}
-      {/*    <div className={styles.popupButtons}>*/}
-      {/*      <button onClick={cancelDelete} className={styles.cancelButton}>*/}
-      {/*        No*/}
-      {/*      </button>*/}
-      {/*      <button onClick={confirmDelete} className={styles.confirmButton}>*/}
-      {/*        Yes*/}
-      {/*      </button>*/}
-      {/*    </div>*/}
-      {/*  </div>*/}
-      {/*)}*/}
       {showValidationPopup && (
         <div className={styles.validationPopup} ref={popupRef}>
           <div className={styles.wrapperPopup}>
