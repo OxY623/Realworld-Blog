@@ -52,12 +52,17 @@ function App() {
         {/*>*/}
 
         <Routes>
-          <Route path="/" element={<ArticlesPage />} />
+          {/*<Route path="/" element={<ArticlesPage />} />*/}
+          <Route
+            path="/"
+            element={<Navigate to="/articles/page/1" replace />}
+          />
           {/*<Route path="/new-article" element={<NewArticle />} />*/}
           <Route element={<PrivateRoute />}>
             <Route path="/new-article" element={<NewArticle />} />
           </Route>
-          <Route path="/articles" element={<ArticlesPage />} />
+          {/*<Route path="/articles" element={<ArticlesPage />} />*/}
+          <Route path="/articles/page/:page?" element={<ArticlesPage />} />
           <Route path="/articles/:slug" element={<ArticlePage />} />
           <Route path="/articles/:slug/edit" element={<EditArticle />} />
           <Route path="/sign-in" element={<SignIn />} />
