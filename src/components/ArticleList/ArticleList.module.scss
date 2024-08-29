@@ -37,19 +37,21 @@
 }
 
 /*Маленький хак*/
-.ant-pagination-options {
-  display:none !important;
-}
+:global {
+  .ant-pagination-options {
+    display: none !important;
+  }
 
-.ant-select-selector{
-  display:none !important;
-}
+  .ant-select-selector {
+    display: none !important;
+  }
 
-.ant-pagination-item-active{
-  background-color: #1890FF  !important;
-  color: #F0EFEF !important;
-}
+  .ant-pagination-item-active {
+    background-color: #1890FF !important;
+    color: #F0EFEF !important;
+  }
 
-.ant-pagination-item-active a {
-  color: #F0EFEF !important;
+  .ant-pagination-item-active a {
+    color: #F0EFEF !important;
+  }
 }
