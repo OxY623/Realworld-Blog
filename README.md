@@ -1,5 +1,5 @@
-[Link REAL_WORLD BLOG ](https://realworld-blog.netlify.app/)
-
+[!Link REAL_WORLD BLOG ](https://realworld-blog.netlify.app/)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/de16672d-4372-4de8-93a3-daeeda190f6d/deploy-status)](https://app.netlify.com/sites/realworld-blog/deploys)
 
 
 # Getting Started with Create React App
