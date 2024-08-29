@@ -130,9 +130,15 @@ export const fetchArticles = async (page = 1) => {
 }
 
 export const fetchArticle = async (slug) => {
+  const token = LocalStorageAPI.load('token')
   // eslint-disable-next-line no-useless-catch
   try {
-    const response = await axios.get(`${API_URL}/articles/${slug}`)
+    const response = await axios.get(`${API_URL}/articles/${slug}`, {
+      headers: {
+        Authorization: `Token ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
     return response.data.article
   } catch (error) {
     throw error
