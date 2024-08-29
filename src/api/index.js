@@ -30,15 +30,11 @@ export const fetchFavoriteArticle = async (slug) => {
 
   // eslint-disable-next-line no-useless-catch
   try {
-    return await axios.post(
-      `${API_URL}/articles/${slug}/favorite`,
-      {},
-      {
-        headers: {
-          Authorization: `Token ${token}`,
-        },
+    return await axios.post(`${API_URL}/articles/${slug}/favorite`, undefined, {
+      headers: {
+        Authorization: `Token ${token}`,
       },
-    )
+    })
   } catch (error) {
     throw error
   }
