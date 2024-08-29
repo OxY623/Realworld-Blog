@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Pagination } from 'antd'
 import 'antd/dist/reset.css'
 
 import { getArticles, setPage } from '../../store/actions/articlesActions'
-// import Pagination from '../Pagination'
 import ArticleCard from '../ArticleCard'
 import Spinner from '../Spinner'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
@@ -19,7 +18,6 @@ const ArticleList = () => {
   const error = useSelector((state) => state.articles.error)
   const page = useSelector((state) => state.articles.page)
   const totalArticles = useSelector((state) => state.articles.totalArticles)
-  const style = { color: 'rgba(0, 0, 0, 0.75)' }
 
   const dispatch = useDispatch()
 
@@ -27,46 +25,46 @@ const ArticleList = () => {
     dispatch(getArticles(page))
   }, [dispatch, page])
 
-  if (loading)
-    return (
-      <div>
-        <Spinner />
-      </div>
-    )
-  if (error)
-    return (
-      <div>
-        {' '}
-        <ErrorMessage message={error} />
-      </div>
-    )
+  const style = useMemo(() => ({ color: 'rgba(0, 0, 0, 0.75)' }), [])
+
+  const articleList = useMemo(() => {
+    return articles.map((article) => (
+      <Link
+        key={article.slug}
+        className={styles.link}
+        to={`/articles/${article.slug}`}
+      >
+        <ArticleCard article={article} style={style} />
+      </Link>
+    ))
+  }, [articles, style])
+
+  const handlePageChange = useCallback(
+    (newPage) => {
+      dispatch(setPage(newPage))
+    },
+    [dispatch],
+  )
+
+  if (loading) {
+    return <Spinner />
+  }
+
+  if (error) {
+    return <ErrorMessage message={error} />
+  }
+
+  if (articles.length === 0) {
+    return <NotFound />
+  }
 
   return (
     <div className={styles.articleList}>
-      <div className={styles.container}>
-        {/*<ArticleCard />*/}
-        {articles.length === 0 ? (
-          <div>
-            {' '}
-            <NotFound />
-          </div>
-        ) : (
-          articles.map((article) => (
-            // eslint-disable-next-line react/jsx-key
-            <Link
-              key={article.slug}
-              className={styles.link}
-              to={`/articles/${article.slug}`}
-            >
-              <ArticleCard article={article} style={style} />
-            </Link>
-          ))
-        )}
-      </div>
+      <div className={styles.container}>{articleList}</div>
       <div className={styles.articlesPaginater}>
         <Pagination
           current={page}
-          onChange={(newPage) => dispatch(setPage(newPage))}
+          onChange={handlePageChange}
           total={totalArticles}
           pageSize={5}
         />

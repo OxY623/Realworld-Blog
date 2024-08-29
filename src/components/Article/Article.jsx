@@ -8,10 +8,7 @@ import remarkGfm from 'remark-gfm'
 import ArticleCard from '../ArticleCard'
 import Spinner from '../Spinner'
 import NotFound from '../NotFound'
-// eslint-disable-next-line import/order
 import { fetchArticleById } from '../../store/actions/articlesActions'
-
-// eslint-disable-next-line import/no-unresolved
 import ActionButtons from '../ActionButtons'
 import ErrorMessage from '../ErrorMessage/ErrorMessage'
 
@@ -26,55 +23,27 @@ const Article = () => {
   const error = useSelector((state) => state.articles.error)
 
   useEffect(() => {
-    if (slug) {
+    if (slug && (!article || article.slug !== slug)) {
       dispatch(fetchArticleById(slug))
     }
-  }, [slug, dispatch])
+  }, [slug, dispatch, article])
 
-  // useEffect(() => {
-  //   console.log('Article:', article)
-  //   console.log('Loading:', loading)
-  //   console.log('Error:', error)
-  // }, [article, loading, error])
-
-  if (loading)
+  if (loading) {
     return (
       <div>
         <Spinner />
       </div>
     )
-
-  if (error && !article) {
-    return (
-      <div>
-        <NotFound />
-      </div>
-    )
-  } else if (error) {
-    return <ErrorMessage message={error} />
   }
 
-  if (!article && !loading) {
-    return (
-      <div>
-        <Spinner />
-      </div>
-    )
-  } else if (!article) {
-    return (
-      <div>
-        <NotFound />
-      </div>
-    )
+  if (!article) {
+    return error ? <ErrorMessage message={error} /> : <NotFound />
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.article}>
-        <ArticleCard
-          article={article}
-          style={{ color: 'rgba(0, 0, 0, 0.5)' }}
-        />
+        <ArticleCard article={article} />
         <ActionButtons />
         <h1 className={styles.title}>{article.title}</h1>
         <ReactMarkdown

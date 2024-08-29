@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback, memo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { format } from 'date-fns'
 
@@ -11,7 +11,7 @@ import styles from './ArticleCard.module.scss'
 import TransparentHeart from './TransparentHeart'
 import defaultUserLogo from './user_logo.svg'
 
-const ArticleCard = (props) => {
+const ArticleCard = memo(function ArticleCard(props) {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
   const article = props.article || {}
@@ -36,20 +36,36 @@ const ArticleCard = (props) => {
 
   const { style } = props
 
-  const handleLikeClick = (event) => {
-    event.preventDefault()
-    event.stopPropagation()
+  const handleLikeClick = useCallback(
+    (event) => {
+      event.preventDefault()
+      event.stopPropagation()
 
-    if (liked) {
-      dispatch(unfavoritedArticle(article.slug))
-      setLiked(false)
-      setLikeCount(likeCount - 1)
-    } else {
-      dispatch(favoriteArticle(article.slug))
-      setLiked(true)
-      setLikeCount(likeCount + 1)
-    }
-  }
+      if (liked) {
+        dispatch(unfavoritedArticle(article.slug))
+        setLiked(false)
+        setLikeCount(likeCount - 1)
+      } else {
+        dispatch(favoriteArticle(article.slug))
+        setLiked(true)
+        setLikeCount(likeCount + 1)
+      }
+    },
+    [liked, likeCount, article.slug, dispatch],
+  )
+
+  const handleHeartClick = useCallback(
+    (event) => {
+      if (isAuthenticated) {
+        handleLikeClick(event)
+      } else {
+        event.preventDefault()
+        event.stopPropagation()
+        window.alert('Please login to like this article')
+      }
+    },
+    [isAuthenticated, handleLikeClick],
+  )
 
   const dateUpdated = new Date(updatedAt)
   const formattedDate = format(dateUpdated, 'MMMM d, yyyy')
@@ -69,18 +85,7 @@ const ArticleCard = (props) => {
           <div className={styles.wrapper}>
             <h3>{title}</h3>
             <div className={styles.articleLikes} aria-label="likes">
-              <TransparentHeart
-                filled={liked}
-                onClick={(event) => {
-                  if (isAuthenticated) {
-                    handleLikeClick(event)
-                  } else {
-                    event.preventDefault()
-                    event.stopPropagation()
-                    window.alert('Please login to like this article')
-                  }
-                }}
-              />
+              <TransparentHeart filled={liked} onClick={handleHeartClick} />
               <span>{likeCount}</span>
             </div>
           </div>
@@ -99,6 +104,6 @@ const ArticleCard = (props) => {
       </div>
     </a>
   )
-}
+})
 
 export default ArticleCard
