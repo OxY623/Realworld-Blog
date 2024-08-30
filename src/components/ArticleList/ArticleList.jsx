@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { Pagination } from 'antd'
 import 'antd/dist/reset.css'
 
@@ -20,10 +20,8 @@ const ArticleList = () => {
   const currentPage = useSelector((state) => state.articles.page)
   const { page: urlPage } = useParams()
   const navigate = useNavigate()
-
   const dispatch = useDispatch()
 
-  // Convert urlPage to a number and default to 1
   const pageNumber = parseInt(urlPage, 10) || 1
 
   useEffect(() => {
@@ -36,25 +34,15 @@ const ArticleList = () => {
     dispatch(getArticles(pageNumber))
   }, [dispatch, pageNumber])
 
-  const style = useMemo(() => ({ color: 'rgba(0, 0, 0, 0.75)' }), [])
-
   const articleList = useMemo(() => {
     return articles.map((article) => (
-      <Link
-        key={article.slug}
-        className={styles.link}
-        to={`/articles/${article.slug}`}
-      >
-        <ArticleCard article={article} style={style} />
-      </Link>
+      <ArticleCard key={article.slug} article={article} />
     ))
-  }, [articles, style])
+  }, [articles])
 
   const handlePageChange = useCallback(
     (newPage) => {
-      // Update Redux state
       dispatch(setPage(newPage))
-      // Update URL with the new page number
       navigate(`/articles/page/${newPage}`, { replace: true })
     },
     [dispatch, navigate],

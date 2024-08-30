@@ -133,7 +133,7 @@ export const fetchArticleById = (slug) => async (dispatch) => {
 }
 
 export const favoriteArticle = (slug) => async (dispatch) => {
-  dispatch(fetchArticlesRequest())
+  //dispatch(fetchArticlesRequest())
   try {
     const response = await fetchFavoriteArticle(slug)
     dispatch({ type: EDIT_ARTICLE, payload: response.data.article })
@@ -143,7 +143,7 @@ export const favoriteArticle = (slug) => async (dispatch) => {
 }
 
 export const unfavoritedArticle = (slug) => async (dispatch) => {
-  dispatch(fetchArticlesRequest())
+  //dispatch(fetchArticlesRequest())
   try {
     const response = await fetchUnfavoritedArticle(slug)
     dispatch({

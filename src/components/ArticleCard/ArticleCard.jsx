@@ -1,71 +1,80 @@
-import React, { useState, useEffect, useCallback, memo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { memo, useCallback } from 'react'
 import { format } from 'date-fns'
+import { Link } from 'react-router-dom'
+import { HeartOutlined, HeartFilled } from '@ant-design/icons'
+import { Button } from 'antd'
+import { useDispatch, useSelector } from 'react-redux'
 
 import {
   favoriteArticle,
   unfavoritedArticle,
 } from '../../store/actions/articlesActions'
 
-import styles from './ArticleCard.module.scss'
-import TransparentHeart from './TransparentHeart'
+// eslint-disable-next-line import/order
 import defaultUserLogo from './user_logo.svg'
 
-const ArticleCard = memo(function ArticleCard(props) {
+// eslint-disable-next-line import/order
+import styles from './ArticleCard.module.scss'
+
+// eslint-disable-next-line react/display-name
+const LikeButton = memo(({ slug, favorited, favoritesCount }) => {
   const dispatch = useDispatch()
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
-  const article = props.article || {}
+  const isLiked = favorited
 
-  const {
-    title = 'Untitled',
-    description = 'No description available',
-    updatedAt = new Date().toISOString(),
-    tagList = [],
-    author = { username: 'Anonymous', image: defaultUserLogo },
-    favoritesCount = 0,
-    favorited = false,
-  } = article
-
-  const [liked, setLiked] = useState(favorited)
-  const [likeCount, setLikeCount] = useState(favoritesCount)
-
-  useEffect(() => {
-    setLiked(favorited)
-    setLikeCount(favoritesCount)
-  }, [favorited, favoritesCount])
-
-  const { style } = props
-
-  const handleLikeClick = useCallback(
-    (event) => {
-      event.preventDefault()
-      event.stopPropagation()
-
-      if (liked) {
-        dispatch(unfavoritedArticle(article.slug))
-        setLiked(false)
-        setLikeCount(likeCount - 1)
-      } else {
-        dispatch(favoriteArticle(article.slug))
-        setLiked(true)
-        setLikeCount(likeCount + 1)
-      }
-    },
-    [liked, likeCount, article.slug, dispatch],
-  )
+  const handleLikeClick = useCallback(() => {
+    if (isLiked) {
+      dispatch(unfavoritedArticle(slug))
+    } else {
+      dispatch(favoriteArticle(slug))
+    }
+  }, [dispatch, isLiked, slug])
 
   const handleHeartClick = useCallback(
     (event) => {
+      // event.preventDefault()
+      // event.stopPropagation()
       if (isAuthenticated) {
-        handleLikeClick(event)
+        handleLikeClick()
       } else {
-        event.preventDefault()
-        event.stopPropagation()
         window.alert('Please login to like this article')
       }
     },
     [isAuthenticated, handleLikeClick],
   )
+
+  return (
+    <div className={styles.articleLikes} aria-label="likes">
+      <Button
+        icon={
+          isLiked ? <HeartFilled style={{ color: 'red' }} /> : <HeartOutlined />
+        }
+        onClick={handleHeartClick}
+        style={{
+          border: 'none',
+          background: 'none',
+          width: '16px',
+          height: '16px',
+        }}
+      />
+      <span>{favoritesCount}</span>
+    </div>
+  )
+})
+
+const ArticleCard = memo(function ArticleCard({ article }) {
+  const {
+    title = 'Untitled',
+    description = 'No description available',
+    updatedAt = new Date().toISOString(),
+    tagList = [],
+    author = {
+      username: 'Anonymous',
+      image: defaultUserLogo || defaultUserLogo,
+    },
+    favorited = false,
+    favoritesCount = 0,
+  } = article
 
   const dateUpdated = new Date(updatedAt)
   const formattedDate = format(dateUpdated, 'MMMM d, yyyy')
@@ -79,20 +88,21 @@ const ArticleCard = memo(function ArticleCard(props) {
   const urlUser = author.image || defaultUserLogo
 
   return (
-    <a href={`/article/${article.slug}`} className={styles.articleCardLink}>
+    <div className={styles.articleCardLink}>
       <div className={styles.articleCard}>
         <div className={styles.articleContent}>
           <div className={styles.wrapper}>
-            <h3>{title}</h3>
-            <div className={styles.articleLikes} aria-label="likes">
-              <TransparentHeart filled={liked} onClick={handleHeartClick} />
-              <span>{likeCount}</span>
-            </div>
+            <Link className={styles.link} to={`/articles/${article.slug}`}>
+              <h3>{title}</h3>
+            </Link>
+            <LikeButton
+              slug={article.slug}
+              favorited={favorited}
+              favoritesCount={favoritesCount}
+            />
           </div>
           <div className={styles.articleTags}>{tagListElements}</div>
-          <p className={styles.articleDescription} style={style}>
-            {description}
-          </p>
+          <p className={styles.articleDescription}>{description}</p>
         </div>
         <div className={styles.articleMeta}>
           <div className={styles.wrapperMeta}>
@@ -102,7 +112,7 @@ const ArticleCard = memo(function ArticleCard(props) {
           <img src={urlUser} alt="Avatar" className={styles.avatar} />
         </div>
       </div>
-    </a>
+    </div>
   )
 })
 

@@ -35,10 +35,10 @@
         word-break: break-word;
       }
 
-      a:hover {
-        text-decoration: none;
-        color: rgb(255, 24, 24);
-      }
+      //a:hover {
+      //  text-decoration: none;
+      //  color: rgb(255, 24, 24);
+      //}
 
       .articleLikes {
         display: flex;
@@ -159,7 +159,33 @@
   box-shadow: none !important;
 }
 
+.heartButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
+.heartButton.filled svg {
+  fill: red;
+}
+
+
+.heartButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
 
 
 
