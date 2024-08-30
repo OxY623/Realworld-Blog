@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, Navigate } from 'react-router-dom'
@@ -17,7 +17,7 @@ const SignIn = () => {
   const style = {
     marginTop: '10px',
   }
-  const [redirect, setRedirect] = useState(false)
+  // const [redirect, setRedirect] = useState(false)
   const dispatch = useDispatch()
   const {
     register,
@@ -25,15 +25,17 @@ const SignIn = () => {
     formState: { errors },
     setError,
   } = useForm()
-  const { user, loading, error } = useSelector((state) => state.auth)
+  const { loading, error, isAuthenticated } = useSelector((state) => state.auth)
 
   const onSubmit = async (data) => {
     try {
       data = formatData('user', data)
       await dispatch(signInUser(data))
-      if (!error && user) {
-        setRedirect(true)
-      }
+      // .then(() => {
+      //   if (!error && isAuthenticated && user) {
+      //     setRedirect(true)
+      //   }
+      // })
     } catch (err) {
       if (err.payload && err.payload.errors) {
         const { errors: serverErrors } = err.payload
@@ -46,8 +48,8 @@ const SignIn = () => {
     }
   }
 
-  if (redirect && user) {
-    return <Navigate to="/" />
+  if (isAuthenticated) {
+    return <Navigate to="/articles/page/1" />
   }
 
   return (
