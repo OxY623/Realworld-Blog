@@ -38,7 +38,8 @@ const ActionButtons = () => {
         navigate('/')
       })
       .catch((error) => {
-        console.error('Failed to delete the article:', error)
+        //console.error('Failed to delete the article:', error)
+        throw error
       })
   }, [dispatch, navigate, article.slug])
 

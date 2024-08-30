@@ -31,7 +31,9 @@ const SignIn = () => {
     try {
       data = formatData('user', data)
       await dispatch(signInUser(data))
-      setRedirect(true)
+      if (!error) {
+        setRedirect(true)
+      }
     } catch (err) {
       if (err.payload && err.payload.errors) {
         const { errors: serverErrors } = err.payload
@@ -44,7 +46,7 @@ const SignIn = () => {
     }
   }
 
-  if (redirect || user) {
+  if (redirect && user) {
     return <Navigate to="/" />
   }
 
