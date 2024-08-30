@@ -62,8 +62,9 @@ const LikeButton = memo(({ slug, favorited, favoritesCount }) => {
   )
 })
 
-const ArticleCard = memo(function ArticleCard({ article }) {
+const ArticleCard = memo(function ArticleCard(props) {
   const {
+    slug = null,
     title = 'Untitled',
     description = 'No description available',
     updatedAt = new Date().toISOString(),
@@ -74,8 +75,8 @@ const ArticleCard = memo(function ArticleCard({ article }) {
     },
     favorited = false,
     favoritesCount = 0,
-  } = article
-
+  } = props.article
+  const headerState = props.headerState
   const dateUpdated = new Date(updatedAt)
   const formattedDate = format(dateUpdated, 'MMMM d, yyyy')
   const tagListElements = tagList.map((tag, index) => (
@@ -92,17 +93,25 @@ const ArticleCard = memo(function ArticleCard({ article }) {
       <div className={styles.articleCard}>
         <div className={styles.articleContent}>
           <div className={styles.wrapper}>
-            <Link className={styles.link} to={`/articles/${article.slug}`}>
+            {headerState ? (
+              <Link className={styles.link} to={`/articles/${slug}`}>
+                <h3>{title}</h3>
+              </Link>
+            ) : (
               <h3>{title}</h3>
-            </Link>
+            )}
             <LikeButton
-              slug={article.slug}
+              slug={slug}
               favorited={favorited}
               favoritesCount={favoritesCount}
             />
           </div>
           <div className={styles.articleTags}>{tagListElements}</div>
-          <p className={styles.articleDescription}>{description}</p>
+          {headerState ? (
+            <p className={styles.articleDescription}>{description}</p>
+          ) : (
+            <p className={styles.articleDescriptionGrey}>{description}</p>
+          )}
         </div>
         <div className={styles.articleMeta}>
           <div className={styles.wrapperMeta}>

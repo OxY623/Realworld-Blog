@@ -21,7 +21,7 @@ const ArticleList = () => {
   const { page: urlPage } = useParams()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
+  const headerState = true
   const pageNumber = parseInt(urlPage, 10) || 1
 
   useEffect(() => {
@@ -36,9 +36,11 @@ const ArticleList = () => {
 
   const articleList = useMemo(() => {
     return articles.map((article) => (
-      <ArticleCard key={article.slug} article={article} />
+      <div className="articleShadow" key={article.slug}>
+        <ArticleCard article={article} headerState={headerState} />
+      </div>
     ))
-  }, [articles])
+  }, [articles, headerState])
 
   const handlePageChange = useCallback(
     (newPage) => {

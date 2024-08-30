@@ -17,7 +17,7 @@ import styles from './Article.module.scss'
 const Article = () => {
   const { slug } = useParams()
   const dispatch = useDispatch()
-
+  const headerState = false
   const article = useSelector((state) => state.articles.article)
   const loading = useSelector((state) => state.articles.loading)
   const error = useSelector((state) => state.articles.error)
@@ -43,7 +43,7 @@ const Article = () => {
   return (
     <div className={styles.container}>
       <div className={styles.article}>
-        <ArticleCard article={article} />
+        <ArticleCard article={article} headerState={headerState} />
         <ActionButtons />
         {/*<h1 className={styles.title}>{article.title}</h1>*/}
         <ReactMarkdown
