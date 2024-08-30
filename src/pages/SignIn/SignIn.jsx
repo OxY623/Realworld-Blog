@@ -8,7 +8,7 @@ import Header from '../../components/Header'
 import FormHeader from '../../components/FormHeader'
 import Button from '../../components/FormButton/FormButton'
 import { formatData } from '../../api'
-import FormGroup from '../../components/FormGroup/FormGroup' // Импортируем компонент FormGroup
+import FormGroup from '../../components/FormGroup/FormGroup'
 
 import styles from './SignIn.module.scss'
 
@@ -31,7 +31,7 @@ const SignIn = () => {
     try {
       data = formatData('user', data)
       await dispatch(signInUser(data))
-      if (!error) {
+      if (!error && user) {
         setRedirect(true)
       }
     } catch (err) {
@@ -84,7 +84,9 @@ const SignIn = () => {
             disabled={loading}
             styles={styles}
           />
-          {error && <p className={styles.error}>{error.message}</p>}
+          {error && (
+            <p className={styles.error}>Email or password is invalid</p>
+          )}
           <Button style={style} type="submit" loading={loading}>
             Login
           </Button>
