@@ -5,6 +5,7 @@ import Button from '../../components/FormButton'
 
 import styles from './ArticleForm.module.scss'
 
+//Generator numbers
 const generateId = () => '_' + Math.random().toString(36).substr(2, 9)
 
 const ArticleForm = ({

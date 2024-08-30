@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { deleteArticle, getArticles } from '../../store/actions/articlesActions'
 
 import styles from './ActionButtons.module.scss'
-//import warning from './Frame 19.svg'
 import warningIcon from './Frame 19.svg'
 
 const ActionButtons = () => {

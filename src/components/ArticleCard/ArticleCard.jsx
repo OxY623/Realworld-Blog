@@ -71,7 +71,7 @@ const ArticleCard = memo(function ArticleCard(props) {
     tagList = [],
     author = {
       username: 'Anonymous',
-      image: defaultUserLogo || defaultUserLogo,
+      image: defaultUserLogo,
     },
     favorited = false,
     favoritesCount = 0,
