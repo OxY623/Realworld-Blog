@@ -19,12 +19,15 @@
     &__link{
       display: flex;
       transition: color 0.3s ease, transform 0.3s ease;
+      color: rgba(0, 0, 0, 0.85);
 
     }
-
-    .logo__link:hover {
+    &__link:hover {
       color: #e70e0e;
       transform: scale(1.1);
+    }
+    &__link:active {
+      color: rgba(0, 0, 0, 0.85);
     }
   }
   .simpleWrapper{
