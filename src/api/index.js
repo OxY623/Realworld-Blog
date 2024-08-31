@@ -4,6 +4,8 @@ import LocalStorageAPI from './LocalStorageAPI'
 
 const API_URL = 'https://blog.kata.academy/api/'
 
+export const generateId = () => '_' + Math.random().toString(36).substr(2, 9)
+
 export const formatData = (item = 'user', data) => {
   const filteredData = Object.entries(data).reduce((acc, [key, value]) => {
     if (
